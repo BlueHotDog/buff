@@ -4,13 +4,13 @@ defmodule PuffServer.Repo.Migrations.CreateUsers do
   def change do
     create table(:users, primary_key: false) do
       add(:id, :binary_id, primary_key: true)
-      add(:full_name, :string)
-      add(:public_email, :string)
-      add(:private_email, :string)
-      add(:username, :string)
-      add(:encrypted_password, :string)
-      add(:is_public_email_verified, :boolean, default: false)
-      add(:is_private_email_verified, :boolean, default: false)
+      add(:full_name, :string, null: false)
+      add(:public_email, :string, null: false)
+      add(:private_email, :string, null: false)
+      add(:username, :string, null: false)
+      add(:password_hash, :string, null: false)
+      add(:is_public_email_verified, :boolean, default: false, null: false)
+      add(:is_private_email_verified, :boolean, default: false, null: false)
 
       timestamps()
     end

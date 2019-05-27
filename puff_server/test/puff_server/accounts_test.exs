@@ -1,17 +1,19 @@
 defmodule PuffServer.AccountsTest do
   use PuffServer.DataCase
+  import Mox
 
   alias PuffServer.Accounts
 
   describe "users" do
     alias PuffServer.Accounts.User
+    setup :verify_on_exit!
 
     @valid_attrs %{
       password: "some password",
       full_name: "some full_name",
-      private_email: "some private_email",
-      public_email: "some public_email",
-      username: "user_name"
+      private_email: "my@private.com",
+      public_email: "my@public.com",
+      username: "user_naMe"
     }
     @update_attrs %{
       encrypted_password: "some updated encrypted_password",
@@ -38,8 +40,15 @@ defmodule PuffServer.AccountsTest do
     end
 
     test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Accounts.list_users() == [user]
+      Argon2
+      |> expect(:add_hash, fn pass -> %{password_hash: "hash1234", password: nil} end)
+
+      user_fixture()
+      list_users = Accounts.list_users()
+      assert length(list_users) == 1
+      user = hd(list_users)
+      assert user.password_hash != nil
+      assert user.username == "user_name"
     end
 
     # test "get_user!/1 returns the user with given id" do
