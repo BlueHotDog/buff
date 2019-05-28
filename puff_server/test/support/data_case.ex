@@ -27,6 +27,7 @@ defmodule PuffServer.DataCase do
 
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(PuffServer.Repo)
+    Mox.stub_with(PuffServer.Argon2Mock, PuffServer.ComeoninStub)
 
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(PuffServer.Repo, {:shared, self()})

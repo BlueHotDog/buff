@@ -29,17 +29,17 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - Accounts
 - Package
   - Access
-  - Name
-  - Description
-  - Keywords
-  - Homepage
+  - Name - x
+  - Description - x
+  - Keywords - x
+  - Homepage - x
   - Bugs
   - License?
   - Contributors
     - Name
     - Email
     - URL
-  - Repository
+  - Repository - x
     - Type
     - URL
     - Directory - For mono-repo support

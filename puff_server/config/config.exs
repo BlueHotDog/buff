@@ -9,7 +9,8 @@ use Mix.Config
 
 config :puff_server,
   ecto_repos: [PuffServer.Repo],
-  generators: [binary_id: true]
+  generators: [binary_id: true],
+  password_hasher: Argon2
 
 # Configures the endpoint
 config :puff_server, PuffServerWeb.Endpoint,

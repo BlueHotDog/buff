@@ -1,5 +1,8 @@
 use Mix.Config
 
+config :puff_server,
+  password_hasher: PuffServer.Argon2Mock
+
 # Configure your database
 config :puff_server, PuffServer.Repo,
   username: "postgres",

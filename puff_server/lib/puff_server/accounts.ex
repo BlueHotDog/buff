@@ -68,6 +68,8 @@ defmodule PuffServer.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
+    attrs = Map.delete(attrs, :username)
+
     user
     |> User.changeset(attrs)
     |> Repo.update()
