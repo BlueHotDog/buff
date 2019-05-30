@@ -1,0 +1,19 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"name": "Puff Server",
+	"dockerComposeFile": "../../devenv/docker-compose.yml",
+	"service": "puff-server",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
+	// Uncomment the next line if you want to publish any ports.
+	"appPort": [4000],
+
+	// Uncomment the next line to run commands after the container is created.
+	// "postCreateCommand": "rustc --version" ,
+
+	"extensions": [
+		"mjmcloug.vscode-elixir",
+		"jakebecker.elixir-ls",
+		"pgourlain.erlang"
+	]
+}

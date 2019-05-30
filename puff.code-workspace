@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "puff_server"
+		},
+		{
+			"path": "devenv"
 		}
 	]
 }
