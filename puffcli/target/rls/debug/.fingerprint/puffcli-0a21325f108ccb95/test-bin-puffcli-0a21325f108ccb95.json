@@ -1,1 +1,0 @@
-{"rustc":14482131511702393637,"features":"[]","target":4721930872703301585,"profile":1647870076477133176,"path":1036222786711178230,"deps":[["clap v2.33.0","clap",7377879361957647778]],"local":[{"MtimeBased":[[1559128540,591168000],".fingerprint/puffcli-0a21325f108ccb95/dep-test-bin-puffcli-0a21325f108ccb95"]}],"rustflags":[],"metadata":11817434882560936605}
