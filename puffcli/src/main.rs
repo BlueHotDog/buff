@@ -1,24 +1,28 @@
 #[macro_use]
 extern crate clap;
 
-use clap::{Arg, App, SubCommand};
+use clap::{App, AppSettings, Arg, SubCommand};
 
 fn main() {
-    let matches = App::new("Puff")
-        .about("Like NPM but for Protobuffers")
+    let app = App::new("Puff")
+        .about("Protobuf version manager - The easiest way to explore and use protobuffs and GRPC")
         .version(crate_version!())
         .author(crate_authors!())
-        .subcommand(loginSubCommand())
-        .get_matches();
-    let url = matches.value_of("URL").unwrap();
-    println!("{}", url);
+        .setting(AppSettings::ArgRequiredElseHelp)
+        .subcommand(login_sub_command());
+
+    let matches = app.get_matches();
+    match matches.subcommand_name() {
+        Some("login") => println!("loginnnn",), // login
+        _ => (),                                // Either no subcommand or one not tested for...
+    };
 }
 
 
-fn loginSubCommand() -> clap::App {
-    return SubCommand::with_name("test")
-        .about("Adds a registy user account")
-        .arg(Arg::with_name("debug")
-            .short("d")
-            .help("print debug information verbosely"))
+fn login_sub_command<'a, 'b>() -> clap::App<'a, 'b> {
+    return SubCommand::with_name("login").about("Login to Puff").arg(
+        Arg::with_name("username")
+            .short("u")
+            .help("Case sensative username"),
+    );
 }
