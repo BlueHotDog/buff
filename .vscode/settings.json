@@ -13,5 +13,6 @@
   "editor.trimAutoWhitespace": false,
 
   // See below
-  "editor.acceptSuggestionOnEnter": "off"
+  "editor.acceptSuggestionOnEnter": "off",
+  "elixir.projectPath": "./puff_server"
 }
