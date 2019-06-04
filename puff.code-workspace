@@ -1,11 +1,11 @@
 {
 	"folders": [
 		{
-"name": "CLI",
+"name": "cli",
 			"path": "cli"
 		},
 		{
-"name": "Server",
+"name": "server",
 			"path": "server"
 		}
 	]
