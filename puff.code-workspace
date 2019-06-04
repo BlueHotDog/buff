@@ -1,10 +1,12 @@
 {
 	"folders": [
 		{
-			"path": "puffcli"
+"name": "CLI",
+			"path": "cli"
 		},
 		{
-			"path": "puff_server"
+"name": "Server",
+			"path": "server"
 		}
 	]
 }
