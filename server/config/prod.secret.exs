@@ -12,7 +12,7 @@ database_url =
     For example: ecto://USER:PASS@HOST/DATABASE
     """
 
-config :puff_server, PuffServer.Repo,
+config :buff_server, buffServer.Repo,
   # ssl: true,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
@@ -24,6 +24,6 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
-config :puff_server, PuffServerWeb.Endpoint,
+config :buff_server, buffServerWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base

@@ -1,4 +1,4 @@
-defmodule PuffServer.ComeoninStub do
+defmodule buffServer.ComeoninStub do
   @moduledoc false
   @behaviour Comeonin
 

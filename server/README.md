@@ -1,4 +1,4 @@
-# PuffServer
+# buffServer
 
 To start your Phoenix server:
 
@@ -23,7 +23,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## Stuff
 
-- .puffignore
+- .buffignore
 - Orgs
 - Teams
 - Accounts

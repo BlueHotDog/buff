@@ -1,6 +1,6 @@
-defmodule PuffServer do
+defmodule buffServer do
   @moduledoc """
-  PuffServer keeps the contexts that define your domain
+  buffServer keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

@@ -1,5 +1,5 @@
-defmodule PuffServer.Repo do
+defmodule buffServer.Repo do
   use Ecto.Repo,
-    otp_app: :puff_server,
+    otp_app: :buff_server,
     adapter: Ecto.Adapters.Postgres
 end

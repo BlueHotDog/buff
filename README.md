@@ -1,7 +1,7 @@
-# Puff - ProtobuFFer registry
-Puff aims to provide an easy way to share, check and discover GRPC services.
+# buff - ProtobuFFer registry
+buff aims to provide an easy way to share, check and discover GRPC services.
 
-# Problem 
+# Problem
 GRPC allows companies to build scalabale and backwards compatible services easily. Unfortunaly there isnt any good solution to search, package and check your services in an easy way.
 
 # Project Goals

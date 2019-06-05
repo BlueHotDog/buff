@@ -1,3 +1,3 @@
-defmodule PuffServerWeb.LayoutView do
-  use PuffServerWeb, :view
+defmodule buffServerWeb.LayoutView do
+  use buffServerWeb, :view
 end

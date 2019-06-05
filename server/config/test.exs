@@ -1,19 +1,19 @@
 use Mix.Config
 
-config :puff_server,
-  password_hasher: PuffServer.Argon2Mock
+config :buff_server,
+  password_hasher: buffServer.Argon2Mock
 
 # Configure your database
-config :puff_server, PuffServer.Repo,
+config :buff_server, buffServer.Repo,
   username: "postgres",
   password: "postgres",
-  database: "puff_server_test",
+  database: "buff_server_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :puff_server, PuffServerWeb.Endpoint,
+config :buff_server, buffServerWeb.Endpoint,
   http: [port: 4002],
   server: false
 

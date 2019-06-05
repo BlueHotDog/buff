@@ -1,8 +1,8 @@
-defmodule PuffServer.Accounts.User do
+defmodule buffServer.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @password_hasher Application.get_env(:puff_server, :password_hasher)
+  @password_hasher Application.get_env(:buff_server, :password_hasher)
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

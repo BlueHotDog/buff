@@ -1,5 +1,5 @@
-defmodule PuffServerWeb.ErrorView do
-  use PuffServerWeb, :view
+defmodule buffServerWeb.ErrorView do
+  use buffServerWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

@@ -1,5 +1,5 @@
-defmodule PuffServerWeb.PageController do
-  use PuffServerWeb, :controller
+defmodule buffServerWeb.PageController do
+  use buffServerWeb, :controller
 
   def index(conn, _params) do
     render(conn, "index.html")

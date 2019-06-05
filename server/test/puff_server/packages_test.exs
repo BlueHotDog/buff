@@ -1,10 +1,10 @@
-defmodule PuffServer.PackagesTest do
-  use PuffServer.DataCase, async: true
+defmodule buffServer.PackagesTest do
+  use buffServer.DataCase, async: true
 
-  alias PuffServer.Packages
+  alias buffServer.Packages
 
   describe "packages" do
-    alias PuffServer.Packages.Package
+    alias buffServer.Packages.Package
 
     @valid_attrs %{
       description: "some description",

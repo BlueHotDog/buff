@@ -1,12 +1,12 @@
-defmodule PuffServer.Packages do
+defmodule buffServer.Packages do
   @moduledoc """
   The Packages context.
   """
 
   import Ecto.Query, warn: false
-  alias PuffServer.Repo
+  alias buffServer.Repo
 
-  alias PuffServer.Packages.Package
+  alias buffServer.Packages.Package
 
   @doc """
   Returns the list of packages.

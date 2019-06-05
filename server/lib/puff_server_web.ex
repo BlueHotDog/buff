@@ -1,12 +1,12 @@
-defmodule PuffServerWeb do
+defmodule buffServerWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use PuffServerWeb, :controller
-      use PuffServerWeb, :view
+      use buffServerWeb, :controller
+      use buffServerWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,19 +19,19 @@ defmodule PuffServerWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: PuffServerWeb
+      use Phoenix.Controller, namespace: buffServerWeb
 
       import Plug.Conn
-      import PuffServerWeb.Gettext
-      alias PuffServerWeb.Router.Helpers, as: Routes
+      import buffServerWeb.Gettext
+      alias buffServerWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/puff_server_web/templates",
-        namespace: PuffServerWeb
+        root: "lib/buff_server_web/templates",
+        namespace: buffServerWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
@@ -39,9 +39,9 @@ defmodule PuffServerWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import PuffServerWeb.ErrorHelpers
-      import PuffServerWeb.Gettext
-      alias PuffServerWeb.Router.Helpers, as: Routes
+      import buffServerWeb.ErrorHelpers
+      import buffServerWeb.Gettext
+      alias buffServerWeb.Router.Helpers, as: Routes
     end
   end
 
@@ -56,7 +56,7 @@ defmodule PuffServerWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import PuffServerWeb.Gettext
+      import buffServerWeb.Gettext
     end
   end
 

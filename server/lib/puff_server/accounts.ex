@@ -1,12 +1,12 @@
-defmodule PuffServer.Accounts do
+defmodule buffServer.Accounts do
   @moduledoc """
   The Accounts context.
   """
 
   import Ecto.Query, warn: false
-  alias PuffServer.Repo
+  alias buffServer.Repo
 
-  alias PuffServer.Accounts.User
+  alias buffServer.Accounts.User
 
   @doc """
   Returns the list of users.

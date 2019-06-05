@@ -7,17 +7,17 @@
 # General application configuration
 use Mix.Config
 
-config :puff_server,
-  ecto_repos: [PuffServer.Repo],
+config :buff_server,
+  ecto_repos: [buffServer.Repo],
   generators: [binary_id: true],
   password_hasher: Argon2
 
 # Configures the endpoint
-config :puff_server, PuffServerWeb.Endpoint,
+config :buff_server, buffServerWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "wXUw9SIoWJdr5qja1muwdTp0f9m/op9COZtL/hoqqQH4WCFDc01CVAT6Y7Tq2c1T",
-  render_errors: [view: PuffServerWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: PuffServer.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: buffServerWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: buffServer.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -1,4 +1,4 @@
-defmodule PuffServer.Repo.Migrations.CreateUsers do
+defmodule buffServer.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do

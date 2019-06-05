@@ -6,7 +6,7 @@ mod integration {
 
     #[test]
     fn calling_without_anything_should_print_help() {
-        let output = Command::new("./target/debug/puffcli login")
+        let output = Command::new("./target/debug/buffcli login")
             .output()
             .expect("failed to execute process");
 

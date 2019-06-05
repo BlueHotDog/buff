@@ -1,4 +1,4 @@
-defmodule PuffServer.Application do
+defmodule buffServer.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,23 +9,23 @@ defmodule PuffServer.Application do
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
-      PuffServer.Repo,
+      buffServer.Repo,
       # Start the endpoint when the application starts
-      PuffServerWeb.Endpoint
-      # Starts a worker by calling: PuffServer.Worker.start_link(arg)
-      # {PuffServer.Worker, arg},
+      buffServerWeb.Endpoint
+      # Starts a worker by calling: buffServer.Worker.start_link(arg)
+      # {buffServer.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: PuffServer.Supervisor]
+    opts = [strategy: :one_for_one, name: buffServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    PuffServerWeb.Endpoint.config_change(changed, removed)
+    buffServerWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

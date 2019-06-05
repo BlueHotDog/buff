@@ -1,9 +1,9 @@
-defmodule PuffServer.MixProject do
+defmodule buffServer.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :puff_server,
+      app: :buff_server,
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule PuffServer.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {PuffServer.Application, []},
+      mod: {buffServer.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

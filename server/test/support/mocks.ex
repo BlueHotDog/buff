@@ -1,1 +1,1 @@
-Mox.defmock(PuffServer.Argon2Mock, for: Comeonin)
+Mox.defmock(buffServer.Argon2Mock, for: Comeonin)

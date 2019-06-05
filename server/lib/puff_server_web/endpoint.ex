@@ -1,46 +1,50 @@
-defmodule PuffServerWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :puff_server
+defmodule buffServerWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :buff_server
 
-  socket "/socket", PuffServerWeb.UserSocket,
+  socket("/socket", buffServerWeb.UserSocket,
     websocket: true,
     longpoll: false
+  )
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
   # when deploying your static files in production.
-  plug Plug.Static,
+  plug(Plug.Static,
     at: "/",
-    from: :puff_server,
+    from: :buff_server,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
+  )
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-    plug Phoenix.LiveReloader
-    plug Phoenix.CodeReloader
+    socket("/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket)
+    plug(Phoenix.LiveReloader)
+    plug(Phoenix.CodeReloader)
   end
 
-  plug Plug.RequestId
-  plug Plug.Logger
+  plug(Plug.RequestId)
+  plug(Plug.Logger)
 
-  plug Plug.Parsers,
+  plug(Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
+  )
 
-  plug Plug.MethodOverride
-  plug Plug.Head
+  plug(Plug.MethodOverride)
+  plug(Plug.Head)
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug Plug.Session,
+  plug(Plug.Session,
     store: :cookie,
-    key: "_puff_server_key",
+    key: "_buff_server_key",
     signing_salt: "OoLXYBcM"
+  )
 
-  plug PuffServerWeb.Router
+  plug(buffServerWeb.Router)
 end

@@ -1,16 +1,16 @@
-defmodule PuffServer.Packages.Package do
+defmodule buffServer.Packages.Package do
   use Ecto.Schema
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "packages" do
-    field :description, :string
-    field :homepage, :string
-    field :keywords, {:array, :string}
-    field :name, :string
-    field :repository_url, :string
-    field :owner_user_id, :binary_id
+    field(:description, :string)
+    field(:homepage, :string)
+    field(:keywords, {:array, :string})
+    field(:name, :string)
+    field(:repository_url, :string)
+    field(:owner_user_id, :binary_id)
 
     timestamps()
   end

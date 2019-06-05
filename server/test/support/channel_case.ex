@@ -1,4 +1,4 @@
-defmodule PuffServerWeb.ChannelCase do
+defmodule buffServerWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule PuffServerWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint PuffServerWeb.Endpoint
+      @endpoint buffServerWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PuffServer.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(buffServer.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(PuffServer.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(buffServer.Repo, {:shared, self()})
     end
 
     :ok

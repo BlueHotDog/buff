@@ -1,5 +1,5 @@
-defmodule PuffServerWeb.PageControllerTest do
-  use PuffServerWeb.ConnCase
+defmodule buffServerWeb.PageControllerTest do
+  use buffServerWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

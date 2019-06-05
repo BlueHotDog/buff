@@ -17,7 +17,7 @@
       "task": "test",
       "taskArgs": ["--trace"],
       "startApps": true,
-      "projectDir": "${workspaceRoot}/puff_server",
+      "projectDir": "${workspaceRoot}/buff_server",
       "requireFiles": ["test/**/test_helper.exs", "test/**/*_test.exs"],
       "excludeModules": ["Argon2.Base"]
     }

@@ -1,4 +1,4 @@
-defmodule PuffServer.DataCase do
+defmodule buffServer.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,21 +16,21 @@ defmodule PuffServer.DataCase do
 
   using do
     quote do
-      alias PuffServer.Repo
+      alias buffServer.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import PuffServer.DataCase
+      import buffServer.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PuffServer.Repo)
-    Mox.stub_with(PuffServer.Argon2Mock, PuffServer.ComeoninStub)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(buffServer.Repo)
+    Mox.stub_with(buffServer.Argon2Mock, buffServer.ComeoninStub)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(PuffServer.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(buffServer.Repo, {:shared, self()})
     end
 
     :ok

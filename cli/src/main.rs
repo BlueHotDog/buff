@@ -4,7 +4,7 @@ extern crate clap;
 use clap::{App, AppSettings, Arg, SubCommand};
 
 fn main() {
-    let app = App::new("Puff")
+    let app = App::new("buff")
         .about("Protobuf version manager - The easiest way to explore and use protobuffs and GRPC")
         .version(crate_version!())
         .author(crate_authors!())
@@ -20,7 +20,7 @@ fn main() {
 
 
 fn login_sub_command<'a, 'b>() -> clap::App<'a, 'b> {
-    return SubCommand::with_name("login").about("Login to Puff").arg(
+    return SubCommand::with_name("login").about("Login to buff").arg(
         Arg::with_name("username")
             .short("u")
             .help("Case sensative username"),

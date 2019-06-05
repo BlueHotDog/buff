@@ -1,3 +1,3 @@
-defmodule PuffServerWeb.PageViewTest do
-  use PuffServerWeb.ConnCase, async: true
+defmodule buffServerWeb.PageViewTest do
+  use buffServerWeb.ConnCase, async: true
 end

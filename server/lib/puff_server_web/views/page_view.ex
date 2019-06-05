@@ -1,3 +1,3 @@
-defmodule PuffServerWeb.PageView do
-  use PuffServerWeb, :view
+defmodule buffServerWeb.PageView do
+  use buffServerWeb, :view
 end

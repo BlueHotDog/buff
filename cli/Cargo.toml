@@ -1,7 +1,7 @@
 #![allow(unknown_lints)]
 #![warn(clippy)]
 [package]
-name = "puffcli"
+name = "buffcli"
 version = "0.1.0"
 authors = ["BlueHotDog <BlueHotDog@users.noreply.github.com>"]
 edition = "2018"

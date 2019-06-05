@@ -1,13 +1,13 @@
-defmodule PuffServer.AccountsTest do
-  use PuffServer.DataCase, async: true
+defmodule buffServer.AccountsTest do
+  use buffServer.DataCase, async: true
   import Mox
 
-  alias PuffServer.Accounts
+  alias buffServer.Accounts
   setup :set_mox_from_context
   setup :verify_on_exit!
 
   describe "users" do
-    alias PuffServer.Accounts.User
+    alias buffServer.Accounts.User
 
     @valid_attrs %{
       password: "some password",

@@ -14,5 +14,5 @@
 
   // See below
   "editor.acceptSuggestionOnEnter": "off",
-  "elixir.projectPath": "./puff_server"
+  "elixir.projectPath": "./buff_server"
 }

@@ -1,3 +1,3 @@
-defmodule PuffServerWeb.LayoutViewTest do
-  use PuffServerWeb.ConnCase, async: true
+defmodule buffServerWeb.LayoutViewTest do
+  use buffServerWeb.ConnCase, async: true
 end
