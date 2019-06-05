@@ -1,4 +1,4 @@
-# buff - ProtobuFFer registry
+# buff - protocolBuffer Registry
 buff aims to provide an easy way to share, check and discover GRPC services.
 
 # Problem
