@@ -1,4 +1,7 @@
 defmodule BuffServer.Packages.Package do
+  @moduledoc """
+  Table to hold metadata about the packages
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -26,20 +29,27 @@ defmodule BuffServer.Packages.Package do
 
   @doc false
   defp validate_url(changeset, field, _opts \\ []) do
-    validate_change(changeset, field, fn _, value ->
-      case URI.parse(value) do
-        %URI{scheme: nil} ->
-          {:err, "is missing a scheme (e.g. https)"}
-
-        %URI{host: nil} ->
-          {:err, "is missing a host"}
-
-        %URI{host: host} ->
-          case :inet.gethostbyname(Kernel.to_charlist(host)) do
-            {:ok, _} -> :ok
-            {:error, _} -> {:err, "invalid host"}
-          end
+    validate_host = fn host ->
+      case :inet.gethostbyname(Kernel.to_charlist(host)) do
+        {:ok, _} -> :ok
+        {:error, _} -> {:err, "invalid host"}
       end
+    end
+
+    validate_change(changeset, field, fn _, value ->
+      result =
+        case URI.parse(value) do
+          %URI{scheme: nil} ->
+            {:err, "is missing a scheme (e.g. https)"}
+
+          %URI{host: nil} ->
+            {:err, "is missing a host"}
+
+          %URI{host: host} ->
+            validate_host.(host)
+        end
+
+      result
       |> case do
         {:err, msg} -> [{field, msg}]
         :ok -> []

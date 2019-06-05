@@ -44,12 +44,16 @@ defmodule BuffServer.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
       {:comeonin, "~> 5.1"},
+      {:joken, "~> 2.0"},
+      # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_unit_notifier, "~> 0.1", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:apex, "~>1.2.1", only: [:dev, :test]},
-      {:mox, "~> 0.5", only: :test}
+      {:mox, "~> 0.5", only: :test},
+      {:faker, "~> 0.12", only: :test},
+      {:ex_machina, "~> 2.3", only: :test}
     ]
   end
 

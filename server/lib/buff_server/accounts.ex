@@ -37,6 +37,9 @@ defmodule BuffServer.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  @spec get_by_username!(term) :: Ecto.Schema.t()
+  def get_by_username!(username), do: Repo.get_by!(User, username: username)
+
   @doc """
   Creates a user.
 

@@ -1,12 +1,15 @@
 {
 	"folders": [
 		{
-"name": "cli",
+			"name": "cli",
 			"path": "cli"
 		},
 		{
-"name": "server",
+			"name": "server",
 			"path": "server"
 		}
-	]
+	],
+	"settings": {
+		"elixirLS.projectDir": "../server"
+	}
 }

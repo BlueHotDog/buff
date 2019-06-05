@@ -16,6 +16,8 @@ config :buff_server, BuffServerWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :joken, default_signer: :pem_rs256
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

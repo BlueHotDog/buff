@@ -22,6 +22,11 @@ defmodule BuffServer.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import BuffServer.DataCase
+      # My stuff
+      import PuffServer.Factory
+      import Mox
+
+      setup :verify_on_exit!
     end
   end
 

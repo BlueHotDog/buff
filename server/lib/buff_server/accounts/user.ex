@@ -1,4 +1,7 @@
 defmodule BuffServer.Accounts.User do
+  @moduledoc """
+  Represents a user in the system, a user is essentially a real person using the system
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -48,14 +51,14 @@ defmodule BuffServer.Accounts.User do
     |> validate_format(:public_email, ~r/@/)
     |> validate_format(:private_email, ~r/@/)
     |> validate_length(:username, min: 4, max: 20)
-    |> validate_format(:username, ~r/^[a-z][a-z_0-9]+[a-z0-9]$/i)
+    |> validate_format(:username, ~r/^[a-z][a-z_\.0-9]+[a-z0-9]$/i)
     |> unique_constraint(:username)
     |> put_pass_hash
     |> update_change(:username, &String.downcase/1)
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, @password_hasher.add_hash(password, b: 4))
+    change(changeset, @password_hasher.add_hash(password, []))
   end
 
   defp put_pass_hash(changeset), do: changeset
