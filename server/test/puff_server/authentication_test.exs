@@ -1,8 +1,8 @@
-defmodule PuffServer.AuthenticationTest do
-  use PuffServer.DataCase, async: true
+defmodule BuffServer.AuthenticationTest do
+  use BuffServer.DataCase, async: true
 
-  alias PuffServer.Accounts
-  alias PuffServer.Authentication
+  alias BuffServer.Accounts
+  alias BuffServer.Authentication
 
   @test_user params_for(:user)
   describe "authentication" do
@@ -47,7 +47,7 @@ defmodule PuffServer.AuthenticationTest do
       user_id = user.id
 
       assert {:ok, %{"user_id" => ^user_id}} =
-               PuffServer.Authentication.Token.verify_and_validate(token)
+               BuffServer.Authentication.Token.verify_and_validate(token)
     end
   end
 end

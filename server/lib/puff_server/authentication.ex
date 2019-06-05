@@ -1,13 +1,13 @@
-defmodule PuffServer.Authentication do
+defmodule BuffServer.Authentication do
   @moduledoc """
-  Handles Authentication in Puff - Authentication is currently done via username/password or JWT token.
+  Handles Authentication in Buff - Authentication is currently done via username/password or JWT token.
   This Context delegates a lot of its work to the Accounts context and to Joken Token
   """
 
-  alias PuffServer.Accounts
-  alias PuffServer.Authentication.Token
+  alias BuffServer.Accounts
+  alias BuffServer.Authentication.Token
 
-  @password_hasher Application.get_env(:puff_server, :password_hasher)
+  @password_hasher Application.get_env(:buff_server, :password_hasher)
 
   @doc """
     Tries to authenticate a given username using the provided passowrd

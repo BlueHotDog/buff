@@ -1,11 +1,11 @@
-defmodule PuffServer.Factory do
+defmodule BuffServer.Factory do
   @moduledoc false
-  use ExMachina.Ecto, repo: PuffServer.Repo
+  use ExMachina.Ecto, repo: BuffServer.Repo
 
   def user_factory(attrs) do
     password = Map.get(attrs, :password, "some password")
 
-    %PuffServer.Accounts.User{
+    %BuffServer.Accounts.User{
       password: password,
       full_name: Faker.Name.name(),
       private_email: Faker.Internet.email(),
@@ -15,6 +15,6 @@ defmodule PuffServer.Factory do
   end
 
   def set_password(user, password) do
-    user |> PuffServer.Accounts.User.changeset(%{"password" => password})
+    user |> BuffServer.Accounts.User.changeset(%{"password" => password})
   end
 end
