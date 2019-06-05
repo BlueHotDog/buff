@@ -1,4 +1,4 @@
-defmodule buffServer.MixProject do
+defmodule BuffServer.MixProject do
   use Mix.Project
 
   def project do
@@ -19,7 +19,7 @@ defmodule buffServer.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {buffServer.Application, []},
+      mod: {BuffServer.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

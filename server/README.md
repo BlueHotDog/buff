@@ -1,4 +1,4 @@
-# buffServer
+# BuffServer
 
 To start your Phoenix server:
 

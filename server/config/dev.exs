@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Configure your database
-config :buff_server, buffServer.Repo,
+config :buff_server, BuffServer.Repo,
   username: "postgres",
   password: "postgres",
   database: "buff_server_dev",
@@ -15,7 +15,7 @@ config :buff_server, buffServer.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :buff_server, buffServerWeb.Endpoint,
+config :buff_server, BuffServerWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,7 +55,7 @@ config :buff_server, buffServerWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :buff_server, buffServerWeb.Endpoint,
+config :buff_server, BuffServerWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",

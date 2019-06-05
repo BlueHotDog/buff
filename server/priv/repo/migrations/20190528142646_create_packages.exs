@@ -1,4 +1,4 @@
-defmodule buffServer.Repo.Migrations.CreatePackages do
+defmodule BuffServer.Repo.Migrations.CreatePackages do
   use Ecto.Migration
 
   def change do

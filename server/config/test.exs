@@ -1,10 +1,10 @@
 use Mix.Config
 
 config :buff_server,
-  password_hasher: buffServer.Argon2Mock
+  password_hasher: BuffServer.Argon2Mock
 
 # Configure your database
-config :buff_server, buffServer.Repo,
+config :buff_server, BuffServer.Repo,
   username: "postgres",
   password: "postgres",
   database: "buff_server_test",
@@ -13,7 +13,7 @@ config :buff_server, buffServer.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :buff_server, buffServerWeb.Endpoint,
+config :buff_server, BuffServerWeb.Endpoint,
   http: [port: 4002],
   server: false
 
