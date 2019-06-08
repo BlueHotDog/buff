@@ -1,25 +1,18 @@
 syntax = "proto3";
 
-package chatty;
+package buff;
 
 service BuffService {
-  rpc SendMessage (SendMessageRequest) returns (SendMessageReply) {}
-  rpc FetchMessages (FetchMessagesRequest) returns (FetchMessagesReply) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
 }
 
-message SendMessageRequest {
-  ChatMessage chat_message = 1;
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
 }
 
-message SendMessageReply {}
-
-message FetchMessagesRequest {}
-
-message FetchMessagesReply {
-    repeated ChatMessage messages = 1;
-}
-
-message ChatMessage {
-    string sender = 1;
-    string text = 2;
+// The response message containing the JWT token.
+message LoginResponse {
+  string token = 1;
 }

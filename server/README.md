@@ -1,6 +1,3 @@
-[![Build Status](https://travis-ci.org/BlueHotDog/buff.svg?branch=master)](https://travis-ci.org/BlueHotDog/buff)
-[![Maintainability](https://api.codeclimate.com/v1/badges/9c9c507f8ebb9a3dab48/maintainability)](https://codeclimate.com/github/BlueHotDog/buff/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/9c9c507f8ebb9a3dab48/test_coverage)](https://codeclimate.com/github/BlueHotDog/buff/test_coverage)
 # BuffServer
 
 To start your Phoenix server:
