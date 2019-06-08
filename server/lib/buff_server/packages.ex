@@ -1,3 +1,4 @@
+# TODO: maybe there needs to be another scope of Registry
 defmodule BuffServer.Packages do
   @moduledoc """
   The Packages context.

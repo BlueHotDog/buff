@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package buff;
+package buff_server_grpc;
 
-service BuffService {
+service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse) {}
 }
 

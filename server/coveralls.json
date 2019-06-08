@@ -1,0 +1,13 @@
+{
+  "skip_files": [
+    "test/support",
+    "deps",
+    "lib/buff_server_web.ex",
+    "lib/buff_server_web/views/error_helpers.ex"
+  ],
+  "coverage_options": {
+    "treat_no_relevant_lines_as_covered": true,
+    "output_dir": "cover/",
+    "minimum_coverage": 100
+  }
+}

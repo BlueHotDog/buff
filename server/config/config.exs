@@ -10,6 +10,11 @@ use Mix.Config
 config :ex_aws,
   json_codec: Jason
 
+# This prevents the GRPC server being automatically started when you start the app,
+# the reason we dont want it is since if this happens, you'll not be able to run ```iex -S mix``` since
+# it'll also try to start the GRPC server and fail on port being already used(duh)
+config :grpc, start_server: false
+
 config :buff_server,
   ecto_repos: [BuffServer.Repo],
   generators: [binary_id: true],
@@ -33,7 +38,8 @@ config :phoenix, :json_library, Jason
 if Mix.env() == :dev do
   config :mix_test_watch,
     tasks: [
-      "test"
+      "test --stale",
+      "credo"
     ]
 end
 

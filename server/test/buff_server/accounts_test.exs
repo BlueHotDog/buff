@@ -1,5 +1,5 @@
 defmodule BuffServer.AccountsTest do
-  use BuffServer.DataCase, async: true
+  use BuffServer.DataCase, async: false
   import Mox
 
   alias BuffServer.Accounts
@@ -7,9 +7,10 @@ defmodule BuffServer.AccountsTest do
   setup :verify_on_exit!
 
   describe "users" do
+    setup :setup_user_fixture
+
     alias BuffServer.Accounts.User
 
-    @valid_attrs params_for(:user)
     @update_attrs params_for(:user, %{
                     password: "some updated encrypted_password",
                     full_name: "some updated full_name",
@@ -26,44 +27,35 @@ defmodule BuffServer.AccountsTest do
       username: nil
     }
 
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-      user
-    end
-
-    test "list_users/0 returns all users" do
-      user_fixture()
+    test "list_users/0 returns all users", %{user_params: user_params} do
       list_users = Accounts.list_users()
       assert length(list_users) == 1
       user = hd(list_users)
       refute user.password_hash == nil
-      assert user.username == @valid_attrs.username
+      assert user.username == user_params.username
     end
 
-    test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
+    test "get_user!/1 returns the user with given id", %{
+      user: user
+    } do
       assert Accounts.get_user!(user.id) == user
     end
 
-    test "create_user/1 with valid data creates a user" do
-      assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
+    test "create_user/1 with valid data creates a user", %{user: user, user_params: user_params} do
       refute user.password_hash == nil
-      assert user.full_name == @valid_attrs.full_name
-      assert user.private_email == @valid_attrs.private_email
-      assert user.public_email == @valid_attrs.public_email
-      assert user.username == @valid_attrs.username
+      assert user.full_name == user_params.full_name
+      assert user.private_email == user_params.private_email
+      assert user.public_email == user_params.public_email
+      assert user.username == user_params.username
     end
 
     test "create_user/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
     end
 
-    test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
+    test "update_user/2 with valid data updates the user", %{
+      user: user
+    } do
       assert {:ok, %User{} = updated_user} = Accounts.update_user(user, @update_attrs)
       refute updated_user.password_hash == nil
       assert updated_user.full_name == @update_attrs.full_name
@@ -72,20 +64,23 @@ defmodule BuffServer.AccountsTest do
       assert updated_user.username == user.username
     end
 
-    test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+    test "update_user/2 with invalid data returns error changeset", %{
+      user: user
+    } do
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
     end
 
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
+    test "delete_user/1 deletes the user", %{
+      user: user
+    } do
       assert {:ok, %User{}} = Accounts.delete_user(user)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
 
-    test "change_user/1 returns a user changeset" do
-      user = user_fixture()
+    test "change_user/1 returns a user changeset", %{
+      user: user
+    } do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end

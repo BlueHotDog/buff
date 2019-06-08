@@ -10,7 +10,14 @@ defmodule BuffServer.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -46,8 +53,21 @@ defmodule BuffServer.MixProject do
       {:comeonin, "~> 5.1"},
       {:joken, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
-      {:ex_aws, "~> 2.0"},  #required by ex_aws_s3
-      {:hackney, "~> 1.9"}, #required by ex_aws_s3
+      # required by ex_aws_s3
+      {:ex_aws, "~> 2.0"},
+      # required by ex_aws_s3
+      {:hackney, "~> 1.9"},
+      {:protobuf, "~> 0.5.3"},
+      # Only for files generated from Google's protos.
+      # Can be ignored if you don't use Google's protos.
+      {:google_protos, "~> 0.1"},
+      # Overrides for GRPC to work..
+      # more info here https://github.com/elixir-grpc/grpc/issues/100
+      {:grpc, github: "tony612/grpc-elixir"},
+      {:cowboy, "~> 2.5",
+       [env: :prod, hex: "cowboy", repo: "hexpm", optional: false, override: true]},
+      {:cowlib, "~> 2.7.3",
+       [env: :prod, hex: "cowlib", repo: "hexpm", optional: false, override: true]},
       # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:dialyzex, "~> 1.2.0", only: :dev},
@@ -57,7 +77,8 @@ defmodule BuffServer.MixProject do
       {:apex, "~>1.2.1", only: [:dev, :test]},
       {:mox, "~> 0.5", only: :test},
       {:faker, "~> 0.12", only: :test},
-      {:ex_machina, "~> 2.3", only: :test}
+      {:ex_machina, "~> 2.3", only: :test},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
@@ -71,7 +92,7 @@ defmodule BuffServer.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "credo", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

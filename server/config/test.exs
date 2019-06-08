@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :grpc, start_server: false
+
 config :buff_server,
   password_hasher: BuffServer.Argon2Mock
 
