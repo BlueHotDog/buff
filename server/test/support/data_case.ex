@@ -14,6 +14,8 @@ defmodule BuffServer.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox, as: SQLSandbox
+
   using do
     quote do
       alias BuffServer.Repo
@@ -31,11 +33,11 @@ defmodule BuffServer.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BuffServer.Repo)
+    :ok = SQLSandbox.checkout(BuffServer.Repo)
     Mox.stub_with(BuffServer.Argon2Mock, BuffServer.ComeoninStub)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BuffServer.Repo, {:shared, self()})
+      SQLSandbox.mode(BuffServer.Repo, {:shared, self()})
     end
 
     :ok

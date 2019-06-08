@@ -3,6 +3,7 @@ defmodule BuffServer.AuthenticationTest do
 
   alias BuffServer.Accounts
   alias BuffServer.Authentication
+  alias BuffServer.Authentication.Token, as: AuthToken
 
   @test_user params_for(:user)
   describe "authentication" do
@@ -46,8 +47,7 @@ defmodule BuffServer.AuthenticationTest do
 
       user_id = user.id
 
-      assert {:ok, %{"user_id" => ^user_id}} =
-               BuffServer.Authentication.Token.verify_and_validate(token)
+      assert {:ok, %{"user_id" => ^user_id}} = AuthToken.verify_and_validate(token)
     end
   end
 end

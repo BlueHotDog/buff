@@ -14,6 +14,7 @@ defmodule BuffServerWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox, as: SQLSandbox
 
   using do
     quote do
@@ -27,10 +28,10 @@ defmodule BuffServerWeb.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BuffServer.Repo)
+    :ok = SQLSandbox.checkout(BuffServer.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BuffServer.Repo, {:shared, self()})
+      SQLSandbox.mode(BuffServer.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

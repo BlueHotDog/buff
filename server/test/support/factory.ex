@@ -2,6 +2,8 @@ defmodule BuffServer.Factory do
   @moduledoc false
   use ExMachina.Ecto, repo: BuffServer.Repo
 
+  alias BuffServer.Accounts.User
+
   def user_factory(attrs) do
     password = Map.get(attrs, :password, "some password")
 
@@ -15,6 +17,6 @@ defmodule BuffServer.Factory do
   end
 
   def set_password(user, password) do
-    user |> BuffServer.Accounts.User.changeset(%{"password" => password})
+    user |> User.changeset(%{"password" => password})
   end
 end
