@@ -13,7 +13,7 @@ defmodule BuffServer.Authentication do
     Tries to authenticate a given username using the provided passowrd
     Returns tuple {:ok, token} if successful, throws otherwise
   """
-  @spec authenticate!(term, term) :: {:ok, term}
+  @spec authenticate!(String.t(), String.t()) :: {:ok, String.t()}
   def authenticate!(username, password) do
     user = Accounts.get_by_username!(username)
     {:ok, user} = @password_hasher.check_pass(user, password, [])
