@@ -7,6 +7,9 @@
 # General application configuration
 use Mix.Config
 
+config :ex_aws,
+  json_codec: Jason
+
 config :buff_server,
   ecto_repos: [BuffServer.Repo],
   generators: [binary_id: true],
