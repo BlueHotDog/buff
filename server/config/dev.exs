@@ -1,5 +1,16 @@
 use Mix.Config
 
+config :ex_aws,
+  region: "local",
+  access_key_id: "minio",
+  secret_access_key: "minio123"
+
+config :ex_aws, :s3,
+  host: "127.0.0.1",
+  region: "local",
+  scheme: "http://",
+  port: 9001
+
 # Configure your database
 config :buff_server, BuffServer.Repo,
   username: "postgres",

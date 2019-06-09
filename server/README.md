@@ -46,3 +46,9 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   - Dependencies
     - name:path
   - isPrivate
+
+## Minio - S3 in development
+
+* Start with `docker-compose up -d` in `./server`
+* Example: `ExAws.S3.put_object("buff-packages-development", "/1", "123") |> ExAws.request!`
+
