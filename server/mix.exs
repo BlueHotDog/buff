@@ -45,10 +45,10 @@ defmodule BuffServer.MixProject do
       {:argon2_elixir, "~> 2.0"},
       {:comeonin, "~> 5.1"},
       {:joken, "~> 2.0"},
-      {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
-      {:poison, "~> 3.0"},
-      {:hackney, "~> 1.9"},
+      {:ex_aws, "~> 2.0"},  #required by ex_aws_s3
+      {:poison, "~> 3.0"},  #required by ex_aws_s3
+      {:hackney, "~> 1.9"}, #required by ex_aws_s3
       # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:dialyzex, "~> 1.2.0", only: :dev},
