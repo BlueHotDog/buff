@@ -68,6 +68,7 @@ defmodule BuffServer.MixProject do
        [env: :prod, hex: "cowboy", repo: "hexpm", optional: false, override: true]},
       {:cowlib, "~> 2.7.3",
        [env: :prod, hex: "cowlib", repo: "hexpm", optional: false, override: true]},
+      {:gun, "~> 1.3", override: true},
       # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:dialyzex, "~> 1.2.0", only: :dev},

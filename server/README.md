@@ -19,6 +19,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 Now you can access your GRPC server at `localhost:50051`
 
 
+## Regenerate Elixir GRPC stubs:
+
+* Make sure you've [protobuf](https://github.com/protocolbuffers/protobuf) installed
+* Make sure you've the Elixir protobuf plugin installed: `mix escript.install hex protobuf`
+* From this folder run: `protoc --elixir_out=plugins=grpc:./lib/buff_server_grpc/ -I .. ../protobuffers/*.proto`
+
 ## Learn more
 
   * Official website: http://www.phoenixframework.org/

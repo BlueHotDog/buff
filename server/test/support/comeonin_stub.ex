@@ -10,7 +10,7 @@ defmodule BuffServer.ComeoninStub do
     if user_struct.password_hash == "#{password}123" do
       {:ok, user_struct}
     else
-      {:error, "Incorrect password or username"}
+      {:error, "Incorrect password or email"}
     end
   end
 

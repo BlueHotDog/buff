@@ -11,11 +11,10 @@ defmodule BuffServer.Accounts.User do
   @foreign_key_type :binary_id
   schema "users" do
     field(:full_name, :string)
-    field(:private_email, :string)
     field(:public_email, :string)
-    field(:username, :string)
+    field(:email, :string)
     field(:is_public_email_verified, :boolean, default: false)
-    field(:is_private_email_verified, :boolean, default: false)
+    field(:is_email_verified, :boolean, default: false)
     # TODO: figure out how :load_in_query works, seems like a proper use here
     field(:password_hash, :string)
 
@@ -32,29 +31,25 @@ defmodule BuffServer.Accounts.User do
     |> cast(attrs, [
       :full_name,
       :public_email,
-      :private_email,
-      :username,
+      :email,
       :password,
       :password_confirmation
     ])
     |> validate_required([
       :full_name,
       :public_email,
-      :private_email,
-      :username,
-      :password,
       :is_public_email_verified,
-      :is_private_email_verified
+      :email,
+      :is_email_verified,
+      :password
     ])
     |> validate_length(:password, min: 8)
     |> validate_confirmation(:password)
     |> validate_format(:public_email, ~r/@/)
-    |> validate_format(:private_email, ~r/@/)
-    |> validate_length(:username, min: 4, max: 20)
-    |> validate_format(:username, ~r/^[a-z][a-z_\.0-9]+[a-z0-9]$/i)
-    |> unique_constraint(:username)
+    |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email)
     |> put_pass_hash
-    |> update_change(:username, &String.downcase/1)
+    |> update_change(:email, &String.downcase/1)
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do

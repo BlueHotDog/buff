@@ -7,10 +7,10 @@ defmodule BuffServer.AuthenticationTest do
   describe "authentication" do
     setup :setup_user_fixture
 
-    test "authenticate/2 throws if username doesnt exists" do
+    test "authenticate/2 throws if email doesnt exists" do
       assert_raise Ecto.NoResultsError, fn ->
         Authentication.authenticate!(
-          "some_non_existing_username",
+          "some_non_existing@email.com",
           "does it really matter?"
         )
       end
@@ -22,7 +22,7 @@ defmodule BuffServer.AuthenticationTest do
     } do
       assert_raise MatchError, fn ->
         Authentication.authenticate!(
-          user.username,
+          user.email,
           user_params.password <> "extra"
         )
       end
@@ -34,7 +34,7 @@ defmodule BuffServer.AuthenticationTest do
     } do
       {:ok, token} =
         Authentication.authenticate!(
-          user.username,
+          user.email,
           user_params.password
         )
 

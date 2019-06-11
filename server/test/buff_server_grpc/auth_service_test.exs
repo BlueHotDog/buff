@@ -1,15 +1,20 @@
 defmodule BuffServerGrpc.AuthServiceTest do
+  use BuffServerGrpc.IntegrationCase
   use BuffServer.DataCase
 
   alias BuffServer.Authentication.Token, as: AuthToken
+  alias BuffServerGrpc.AuthService
   alias BuffServerGrpc.AuthService.Server, as: AuthServer
 
   describe "AuthService" do
     setup :setup_user_fixture
 
-    test "should return an error for incorrect username" do
-      assert_raise(GRPC.RPCError, fn ->
-        AuthServer.login(%{username: "a", password: "c"}, nil)
+    test "should return an error for incorrect email" do
+      get_client(AuthServer, fn channel ->
+        login_req = BuffServerGrpc.LoginRequest.new(email: "a", password: "b")
+
+        assert {:error, %Elixir.GRPC.RPCError{message: "Incorrect credentials", status: 16}} ==
+                 AuthService.Stub.login(channel, login_req)
       end)
     end
 
@@ -17,11 +22,12 @@ defmodule BuffServerGrpc.AuthServiceTest do
       user: user,
       user_params: user_params
     } do
-      assert_raise(GRPC.RPCError, fn ->
-        AuthServer.login(
-          %{username: user.username, password: user_params.password <> "a"},
-          nil
-        )
+      login_req =
+        BuffServerGrpc.LoginRequest.new(email: user.email, password: user_params.password <> "a")
+
+      get_client(AuthServer, fn channel ->
+        assert {:error, %Elixir.GRPC.RPCError{message: "Incorrect credentials", status: 16}} ==
+                 AuthService.Stub.login(channel, login_req)
       end)
     end
 
@@ -29,14 +35,16 @@ defmodule BuffServerGrpc.AuthServiceTest do
       user: user,
       user_params: user_params
     } do
-      %BuffServerGrpc.LoginResponse{token: token} =
-        AuthServer.login(
-          %{username: user_params.username, password: user_params.password},
-          nil
-        )
+      login_req =
+        BuffServerGrpc.LoginRequest.new(email: user_params.email, password: user_params.password)
 
-      user_id = user.id
-      assert {:ok, %{"user_id" => ^user_id}} = AuthToken.verify_and_validate(token)
+      get_client(AuthServer, fn channel ->
+        assert {:ok, %BuffServerGrpc.LoginResponse{token: token}} =
+                 AuthService.Stub.login(channel, login_req)
+
+        user_id = user.id
+        assert {:ok, %{"user_id" => ^user_id}} = AuthToken.verify_and_validate(token)
+      end)
     end
   end
 end

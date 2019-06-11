@@ -3,8 +3,6 @@ defmodule BuffServer.AccountsTest do
   import Mox
 
   alias BuffServer.Accounts
-  setup :set_mox_from_context
-  setup :verify_on_exit!
 
   describe "users" do
     setup :setup_user_fixture
@@ -14,17 +12,15 @@ defmodule BuffServer.AccountsTest do
     @update_attrs params_for(:user, %{
                     password: "some updated encrypted_password",
                     full_name: "some updated full_name",
-                    private_email: "ohMy@email.com",
-                    public_email: "wow@gmail.com",
-                    username: "oh_diff_username"
+                    email: "ohMy@email.com",
+                    public_email: "wow@gmail.com"
                   })
 
     @invalid_attrs %{
       encrypted_password: nil,
       full_name: nil,
-      private_email: nil,
-      public_email: nil,
-      username: nil
+      email: nil,
+      public_email: nil
     }
 
     test "list_users/0 returns all users", %{user_params: user_params} do
@@ -32,7 +28,7 @@ defmodule BuffServer.AccountsTest do
       assert length(list_users) == 1
       user = hd(list_users)
       refute user.password_hash == nil
-      assert user.username == user_params.username
+      assert user.email == user_params.email
     end
 
     test "get_user!/1 returns the user with given id", %{
@@ -44,9 +40,8 @@ defmodule BuffServer.AccountsTest do
     test "create_user/1 with valid data creates a user", %{user: user, user_params: user_params} do
       refute user.password_hash == nil
       assert user.full_name == user_params.full_name
-      assert user.private_email == user_params.private_email
+      assert user.email == user_params.email
       assert user.public_email == user_params.public_email
-      assert user.username == user_params.username
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -59,9 +54,8 @@ defmodule BuffServer.AccountsTest do
       assert {:ok, %User{} = updated_user} = Accounts.update_user(user, @update_attrs)
       refute updated_user.password_hash == nil
       assert updated_user.full_name == @update_attrs.full_name
-      assert updated_user.private_email == @update_attrs.private_email
+      assert updated_user.email == user.email
       assert updated_user.public_email == @update_attrs.public_email
-      assert updated_user.username == user.username
     end
 
     test "update_user/2 with invalid data returns error changeset", %{

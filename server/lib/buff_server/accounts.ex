@@ -37,8 +37,8 @@ defmodule BuffServer.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
-  @spec get_by_username!(term) :: Ecto.Schema.t()
-  def get_by_username!(username), do: Repo.get_by!(User, username: username)
+  @spec get_by_email!(String.t()) :: Ecto.Schema.t()
+  def get_by_email!(email), do: Repo.get_by!(User, email: email)
 
   @doc """
   Creates a user.
@@ -71,7 +71,7 @@ defmodule BuffServer.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
-    attrs = Map.delete(attrs, :username)
+    attrs = Map.delete(attrs, :email)
 
     user
     |> User.changeset(attrs)

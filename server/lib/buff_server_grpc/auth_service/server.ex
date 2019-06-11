@@ -8,9 +8,9 @@ defmodule BuffServerGrpc.AuthService.Server do
                  GRPC.Status.unauthenticated(),
                  "Incorrect credentials"
                )
-  @spec login(%{password: String.t(), username: String.t()}, any) :: any
-  def login(%{username: username, password: password}, _stream) do
-    {:ok, token} = BuffServer.Authentication.authenticate!(username, password)
+  @spec login(%{password: String.t(), email: String.t()}, any) :: any
+  def login(%{email: email, password: password}, _stream) do
+    {:ok, token} = BuffServer.Authentication.authenticate!(email, password)
     BuffServerGrpc.LoginResponse.new(token: token)
   rescue
     Ecto.NoResultsError ->

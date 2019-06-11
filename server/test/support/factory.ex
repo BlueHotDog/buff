@@ -11,9 +11,8 @@ defmodule BuffServer.Factory do
     %BuffServer.Accounts.User{
       password: password,
       full_name: Faker.Name.name(),
-      private_email: Faker.Internet.email(),
-      public_email: Faker.Internet.email(),
-      username: Faker.Internet.user_name()
+      email: Faker.Internet.email(),
+      public_email: Faker.Internet.email()
     }
   end
 
