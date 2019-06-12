@@ -1,10 +1,20 @@
 #[macro_use]
 extern crate clap;
+extern crate directories;
+
 
 use clap::{App, AppSettings, Arg, SubCommand};
+use directories::{BaseDirs, ProjectDirs, UserDirs};
+use std::fs;
+use std::io;
 
-fn main() {
-    let app = App::new("buff")
+fn main()-> Result<(), std::option::NoneError> {
+    let proj_dirs = ProjectDirs::from("com", "", env!("CARGO_PKG_NAME")).unwrap();
+    let b = proj_dirs.config_dir().to_str()?;
+    // let a = fs::create_dir()?;
+
+
+    let app = App::new(env!("CARGO_PKG_NAME"))
         .about("Protobuf version manager - The easiest way to explore and use protobuffs and GRPC")
         .version(crate_version!())
         .author(crate_authors!())
@@ -16,6 +26,7 @@ fn main() {
         Some("login") => println!("loginnnn",), // login
         _ => (),                                // Either no subcommand or one not tested for...
     };
+    Ok(())
 }
 
 
