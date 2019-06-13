@@ -11,6 +11,9 @@ config :ex_aws, :s3,
   scheme: "http://",
   port: 9001
 
+config :buff_server,
+  s3_bucket_name: "buff-packages-development"
+
 # Configure your database
 config :buff_server, BuffServer.Repo,
   username: "postgres",
