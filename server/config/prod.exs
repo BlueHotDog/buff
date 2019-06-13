@@ -1,5 +1,8 @@
 use Mix.Config
 
+config :buff_server,
+  s3_bucket_name: "buff-packages-prod"
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.

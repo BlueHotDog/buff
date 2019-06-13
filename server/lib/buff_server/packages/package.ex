@@ -7,6 +7,7 @@ defmodule BuffServer.Packages.Package do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @required_fields [:name, :description, :keywords, :homepage, :repository_url, :s3_bucket_name, :s3_bucket_path]
   schema "packages" do
     field(:description, :string)
     field(:homepage, :string)
@@ -14,15 +15,18 @@ defmodule BuffServer.Packages.Package do
     field(:name, :string)
     field(:repository_url, :string)
     field(:owner_user_id, :binary_id)
+    field(:s3_bucket_name, :string)
+    field(:s3_bucket_path, :string)
 
     timestamps()
   end
 
   @doc false
-  def changeset(package, attrs) do
+  def changeset(package, attrs, omit_fields \\ []) do
+    required_fields = @required_fields -- omit_fields
     package
-    |> cast(attrs, [:name, :description, :keywords, :homepage, :repository_url])
-    |> validate_required([:name, :description, :keywords, :homepage, :repository_url])
+    |> cast(attrs, required_fields)
+    |> validate_required(required_fields)
     |> unique_constraint(:name)
     |> validate_url(:repository_url)
   end

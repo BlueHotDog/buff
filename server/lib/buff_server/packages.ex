@@ -1,5 +1,8 @@
 # TODO: maybe there needs to be another scope of Registry
 defmodule BuffServer.Packages do
+  @s3_bucket_name Application.get_env(:buff_server, :s3_bucket_name)
+
+
   @moduledoc """
   The Packages context.
   """
@@ -50,8 +53,14 @@ defmodule BuffServer.Packages do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_package(attrs \\ %{}) do
-    %Package{}
+  def create_package!(%{artifact_binary: artifact_binary} = attrs) when is_binary(artifact_binary) do
+    changeset = %Package{}
+    |> Package.changeset(attrs, [:s3_bucket_name, :s3_bucket_path])
+
+    bucket_path = "/#{attrs.name}/artifact"
+    %{status_code: 200} = ExAws.S3.put_object(@s3_bucket_name, bucket_path, artifact_binary) |> ExAws.request!
+    attrs = Map.merge(attrs, %{s3_bucket_name: @s3_bucket_name, s3_bucket_path: bucket_path})
+    changeset = %Package{}
     |> Package.changeset(attrs)
     |> Repo.insert()
   end
@@ -68,11 +77,11 @@ defmodule BuffServer.Packages do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_package(%Package{} = package, attrs) do
-    package
-    |> Package.changeset(attrs)
-    |> Repo.update()
-  end
+  # def update_package(%Package{} = package, attrs) do
+  #   package
+  #   |> Package.changeset(attrs)
+  #   |> Repo.update()
+  # end
 
   @doc """
   Deletes a Package.
@@ -86,8 +95,9 @@ defmodule BuffServer.Packages do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_package(%Package{} = package) do
-    Repo.delete(package)
+  def delete_package!(%Package{} = package) do
+    {:ok, %BuffServer.Packages.Package{}} = Repo.delete(package)
+    %{status_code: 200} = ExAws.S3.delete_object(package.s3_bucket_name, package.s3_bucket_path) |> ExAws.request!
   end
 
   @doc """
@@ -99,7 +109,7 @@ defmodule BuffServer.Packages do
       %Ecto.Changeset{source: %Package{}}
 
   """
-  def change_package(%Package{} = package) do
-    Package.changeset(package, %{})
-  end
+  # def change_package(%Package{} = package) do
+  #   Package.changeset(package, %{})
+  # end
 end

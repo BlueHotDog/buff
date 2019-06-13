@@ -4,10 +4,10 @@ defmodule BuffServer.AccountsTest do
 
   alias BuffServer.Accounts
   setup :set_mox_from_context
-  setup :verify_on_exit!
 
   describe "users" do
     setup :setup_user_fixture
+    setup :verify_on_exit!
 
     alias BuffServer.Accounts.User
 
@@ -84,4 +84,5 @@ defmodule BuffServer.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end
+
 end
