@@ -15,12 +15,6 @@ defmodule BuffServer.Packages do
 
   @doc """
   Returns the list of packages.
-
-  # ## Examples
-
-  #     iex> list_packages()
-  #     [%BuffServer.Packages.Package{}, ...]
-
   """
   def list_packages do
     Repo.all(Package)
@@ -72,24 +66,6 @@ defmodule BuffServer.Packages do
   def s3_bucket_path(attrs) do
     "/#{attrs.name}/artifact"
   end
-
-  # @doc """
-  # Updates a package.
-
-  # ## Examples
-
-  #     iex> update_package(package, %{field: new_value})
-  #     {:ok, %Package{}}
-
-  #     iex> update_package(package, %{field: bad_value})
-  #     {:error, %Ecto.Changeset{}}
-
-  # """
-  # # def update_package(%Package{} = package, attrs) do
-  # #   package
-  # #   |> Package.changeset(attrs)
-  # #   |> Repo.update()
-  # # end
 
   @doc """
   Deletes a Package.

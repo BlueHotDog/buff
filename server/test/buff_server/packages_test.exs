@@ -1,7 +1,6 @@
 defmodule BuffServer.PackagesTest do
   use BuffServer.DataCase, async: true
   alias BuffServer.Packages
-  doctest BuffServer.Packages
   import Mox
 
   describe "packages" do
