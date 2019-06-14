@@ -1,24 +1,25 @@
-# TODO: maybe there needs to be another scope of Registry
 defmodule BuffServer.Packages do
-  @s3_bucket_name Application.get_env(:buff_server, :s3_bucket_name)
-
-
   @moduledoc """
-  The Packages context.
+  The Packages Context.
+  A Package holds the actual artifact with the Protobuf files and also meta-data to help manage
+  the pacakge itself.
   """
 
+  @s3_bucket_name Application.get_env(:buff_server, :s3_bucket_name)
+
   import Ecto.Query, warn: false
-  alias BuffServer.Repo
 
   alias BuffServer.Packages.Package
+  alias BuffServer.Repo
+  alias Ecto.Multi
 
   @doc """
   Returns the list of packages.
 
-  ## Examples
+  # ## Examples
 
-      iex> list_packages()
-      [%Package{}, ...]
+  #     iex> list_packages()
+  #     [%BuffServer.Packages.Package{}, ...]
 
   """
   def list_packages do
@@ -29,90 +30,98 @@ defmodule BuffServer.Packages do
   Gets a single package.
 
   Raises `Ecto.NoResultsError` if the Package does not exist.
-
-  ## Examples
-
-      iex> get_package!(123)
-      %Package{}
-
-      iex> get_package!(456)
-      ** (Ecto.NoResultsError)
-
   """
-  def get_package!(id) do
-    package = Repo.get!(Package, id)
-    package
-  end
+  def get_package!(id), do: Repo.get!(Package, id)
 
   @doc """
-  Creates a package.
-
-  ## Examples
-
-      iex> create_package(%{field: value})
-      {:ok, %Package{}}
-
-      iex> create_package(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Creates the package and uploads to S3, this is run inside a transaction so if anything fails it'll rollback.
   """
-  def create_package!(%{artifact_binary: artifact_binary} = attrs) when is_binary(artifact_binary) do
-    changeset = %Package{}
-    |> Package.changeset(attrs, [:s3_bucket_name, :s3_bucket_path])
-
-    bucket_path = "/#{attrs.name}/artifact"
-    %{status_code: 200} = ExAws.S3.put_object(@s3_bucket_name, bucket_path, artifact_binary) |> ExAws.request!
+  def create_package(%{artifact_binary: artifact_binary} = attrs)
+      when is_binary(artifact_binary) do
+    bucket_path = s3_bucket_path(attrs)
     attrs = Map.merge(attrs, %{s3_bucket_name: @s3_bucket_name, s3_bucket_path: bucket_path})
-    changeset
-    |> Package.changeset(attrs)
-    |> Repo.insert()
+    changeset = Package.changeset(%Package{}, attrs)
+
+    transaction_res =
+      Multi.new()
+      |> Multi.insert(:package, changeset)
+      |> Multi.run(:s3_artifact, fn _repo, changes ->
+        put_result =
+          @s3_bucket_name
+          |> ExAws.S3.put_object(bucket_path, artifact_binary)
+          |> ExAws.request()
+
+        with {:ok, %{status_code: 200}} <- put_result do
+          {:ok, changes}
+        else
+          err -> {:error, err}
+        end
+      end)
+      |> Repo.transaction()
+
+    with {:ok, %{package: package}} <- transaction_res do
+      {:ok, package}
+    else
+      err -> err
+    end
   end
 
   @doc """
-  Updates a package.
-
-  ## Examples
-
-      iex> update_package(package, %{field: new_value})
-      {:ok, %Package{}}
-
-      iex> update_package(package, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Generates the s3 bucket path to be used for this package.
   """
-  # def update_package(%Package{} = package, attrs) do
-  #   package
-  #   |> Package.changeset(attrs)
-  #   |> Repo.update()
-  # end
+  def s3_bucket_path(attrs) do
+    "/#{attrs.name}/artifact"
+  end
+
+  # @doc """
+  # Updates a package.
+
+  # ## Examples
+
+  #     iex> update_package(package, %{field: new_value})
+  #     {:ok, %Package{}}
+
+  #     iex> update_package(package, %{field: bad_value})
+  #     {:error, %Ecto.Changeset{}}
+
+  # """
+  # # def update_package(%Package{} = package, attrs) do
+  # #   package
+  # #   |> Package.changeset(attrs)
+  # #   |> Repo.update()
+  # # end
 
   @doc """
   Deletes a Package.
-
-  ## Examples
-
-      iex> delete_package(package)
-      {:ok, %Package{}}
-
-      iex> delete_package(package)
-      {:error, %Ecto.Changeset{}}
-
   """
-  def delete_package!(%Package{} = package) do
-    {:ok, %BuffServer.Packages.Package{}} = Repo.delete(package)
-    %{status_code: 200} = ExAws.S3.delete_object(package.s3_bucket_name, package.s3_bucket_path) |> ExAws.request!
+  def delete_package(%Package{} = package) do
+    Multi.new()
+    |> Multi.delete(:package, package)
+    |> Multi.run(:s3_artifact, fn _repo, changes ->
+      delete_res =
+        package.s3_bucket_name
+        |> ExAws.S3.delete_object(package.s3_bucket_path)
+        |> ExAws.request()
+
+      with {:ok, %{status_code: 200}} <- delete_res do
+        {:ok, nil}
+      else
+        _ -> {:error, changes}
+      end
+    end)
+    |> Repo.transaction()
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking package changes.
+  # @doc """
+  # Returns an `%Ecto.Changeset{}` for tracking package changes.
 
-  ## Examples
+  # ## Examples
 
-      iex> change_package(package)
-      %Ecto.Changeset{source: %Package{}}
+  #     iex> change_package(package)
+  #     %Ecto.Changeset{source: %Package{}}
 
-  """
-  # def change_package(%Package{} = package) do
-  #   Package.changeset(package, %{})
-  # end
+  # """
+  # # def change_package(%Package{} = package) do
+  # #   Package.changeset(package, %{})
+  # # end
 end

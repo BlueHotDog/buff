@@ -1,4 +1,7 @@
 defmodule Mix.Tasks.Minio.Setup do
+  @moduledoc """
+  Creates the relevant S3 buckets in Minio to allow local/test development
+  """
   use Mix.Task
 
   @shortdoc "Creates the required buckets in Minio"
@@ -7,13 +10,14 @@ defmodule Mix.Tasks.Minio.Setup do
     s3_bucket_name = Application.get_env(:buff_server, :s3_bucket_name)
 
     Mix.Task.run("app.start")
-    Mix.shell.info("Creating bucket #{s3_bucket_name}...")
+    Mix.shell().info("Creating bucket #{s3_bucket_name}...")
 
-    case ExAws.S3.put_bucket(s3_bucket_name, region) |> ExAws.request do
+    case s3_bucket_name |> ExAws.S3.put_bucket(region) |> ExAws.request() do
       {:ok, _} -> :ok
       {:error, {:http_error, 409, _}} -> :ok
     end
-    Mix.shell.info("Successfully created #{s3_bucket_name}!")
+
+    Mix.shell().info("Successfully created #{s3_bucket_name}!")
   end
 end
 
