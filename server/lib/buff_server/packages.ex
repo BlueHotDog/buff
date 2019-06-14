@@ -87,17 +87,4 @@ defmodule BuffServer.Packages do
     end)
     |> Repo.transaction()
   end
-
-  # @doc """
-  # Returns an `%Ecto.Changeset{}` for tracking package changes.
-
-  # ## Examples
-
-  #     iex> change_package(package)
-  #     %Ecto.Changeset{source: %Package{}}
-
-  # """
-  # # def change_package(%Package{} = package) do
-  # #   Package.changeset(package, %{})
-  # # end
 end
