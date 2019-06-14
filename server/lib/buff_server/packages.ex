@@ -39,7 +39,10 @@ defmodule BuffServer.Packages do
       ** (Ecto.NoResultsError)
 
   """
-  def get_package!(id), do: Repo.get!(Package, id)
+  def get_package!(id) do
+    package = Repo.get!(Package, id)
+    package
+  end
 
   @doc """
   Creates a package.
@@ -60,7 +63,7 @@ defmodule BuffServer.Packages do
     bucket_path = "/#{attrs.name}/artifact"
     %{status_code: 200} = ExAws.S3.put_object(@s3_bucket_name, bucket_path, artifact_binary) |> ExAws.request!
     attrs = Map.merge(attrs, %{s3_bucket_name: @s3_bucket_name, s3_bucket_path: bucket_path})
-    changeset = %Package{}
+    changeset
     |> Package.changeset(attrs)
     |> Repo.insert()
   end
