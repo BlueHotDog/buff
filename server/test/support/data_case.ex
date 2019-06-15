@@ -28,8 +28,6 @@ defmodule BuffServer.DataCase do
       import BuffServer.Factory
       import Mox
 
-      ExUnit.Case.register_attribute(__MODULE__, :fixtures, accumulate: true)
-
       setup :verify_on_exit!
     end
   end

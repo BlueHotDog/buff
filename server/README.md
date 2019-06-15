@@ -5,6 +5,7 @@
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
   * Install Node.js dependencies with `cd assets && npm install`
+  * Start Minio for local S3 API: `docker-compose up -d`
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
@@ -27,6 +28,10 @@ Now you can access your GRPC server at `localhost:50051`
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
 
+## Minio - S3 in development
+
+* Start with `docker-compose up -d` in `./server`
+* Example: `ExAws.S3.put_object("buff-packages-development", "/1", "123") |> ExAws.request!`
 
 
 ## Stuff
@@ -54,9 +59,3 @@ Now you can access your GRPC server at `localhost:50051`
   - Dependencies
     - name:path
   - isPrivate
-
-## Minio - S3 in development
-
-* Start with `docker-compose up -d` in `./server`
-* Example: `ExAws.S3.put_object("buff-packages-development", "/1", "123") |> ExAws.request!`
-
