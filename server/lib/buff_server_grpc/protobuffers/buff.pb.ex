@@ -21,14 +21,14 @@ defmodule BuffServerGrpc.LoginResponse do
         }
   defstruct [:token]
 
-  field :token, 1, type: :string
+  field(:token, 1, type: :string)
 end
 
 defmodule BuffServerGrpc.AuthService.Service do
   @moduledoc false
   use GRPC.Service, name: "buff_server_grpc.AuthService"
 
-  rpc :Login, BuffServerGrpc.LoginRequest, BuffServerGrpc.LoginResponse
+  rpc(:Login, BuffServerGrpc.LoginRequest, BuffServerGrpc.LoginResponse)
 end
 
 defmodule BuffServerGrpc.AuthService.Stub do

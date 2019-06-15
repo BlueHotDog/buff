@@ -22,5 +22,11 @@ config :buff_server, BuffServerWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :junit_formatter,
+  report_file: "server_test_report.xml",
+  report_dir: "/tmp/server_junit",
+  print_report_file: false,
+  prepend_project_name?: true
+
 # Print only warnings and errors during test
 config :logger, level: :warn

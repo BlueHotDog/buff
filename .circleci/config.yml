@@ -1,0 +1,114 @@
+version: 2
+jobs:
+  build_server:
+    parallelism: 1
+    docker:
+    - image: circleci/elixir:1.8.2-otp-22
+      environment:
+        MIX_ENV: test
+    - image: circleci/postgres:10-alpine-postgis-ram
+    working_directory: ~/repo/server
+    steps:
+      - checkout:
+          path: ~/repo/
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - restore_cache:
+          keys:
+          - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          - v1-mix-cache-{{ .Branch }}
+          - v1-mix-cache
+      - restore_cache:
+          keys:
+          - v1-build-cache-{{ .Branch }}
+          - v1-build-cache
+      - run: mix do deps.get, compile --warnings-as-errors
+      - save_cache:
+          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths: deps
+      - save_cache:
+          key: v1-mix-cache-{{ .Branch }}
+          paths: deps
+      - save_cache:
+          key: v1-mix-cache
+          paths: deps
+      - save_cache:
+          key: v1-build-cache-{{ .Branch }}
+          paths: _build
+      - save_cache:
+          key: v1-build-cache
+          paths: _build
+
+  analyze_server:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.8.2-otp-22
+        environment:
+          MIX_ENV: test
+      - image: circleci/postgres:10-alpine-postgis-ram
+    working_directory: ~/repo/server
+    steps:
+      - checkout:
+          path: ~/repo/
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - restore_cache:
+          keys:
+          - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          - v1-mix-cache-{{ .Branch }}
+          - v1-mix-cache
+      - restore_cache:
+          keys:
+          - v1-build-cache-{{ .Branch }}
+          - v1-build-cache
+      - run:
+          name: Credo
+          command: mix credo --strict --ignore todo
+      - run:
+          name: formatter
+          command: mix format --check-formatted
+  test_server:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.8.2-otp-22
+        environment:
+          MIX_ENV: test
+          CODECOV_TOKEN: d5e09a52-0017-457a-af70-5557b7d1faad
+      - image: circleci/postgres:10-alpine-postgis-ram
+    working_directory: ~/repo/server
+    steps:
+      - checkout:
+          path: ~/repo/
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - restore_cache:
+          keys:
+          - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          - v1-mix-cache-{{ .Branch }}
+          - v1-mix-cache
+      - restore_cache:
+          keys:
+          - v1-build-cache-{{ .Branch }}
+          - v1-build-cache
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: mkdir -p /tmp/server_junit/
+      - run: mix coveralls.json
+      - run: bash <(curl -s https://codecov.io/bash)
+      - run: mix test --formatter JUnitFormatter
+      - store_test_results:
+          path: /tmp/server_junit
+      - store_artifacts:
+          path: /tmp/server_junit
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_server
+      - analyze_server:
+          requires:
+            - build_server
+      - test_server:
+          requires:
+            - build_server

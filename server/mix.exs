@@ -16,7 +16,8 @@ defmodule BuffServer.MixProject do
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
-        "coveralls.html": :test
+        "coveralls.html": :test,
+        "coveralls.json": :test
       ]
     ]
   end
@@ -79,7 +80,8 @@ defmodule BuffServer.MixProject do
       {:mox, "~> 0.5", only: :test},
       {:faker, "~> 0.12", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:junit_formatter, "~> 3.0", only: :test}
     ]
   end
 
