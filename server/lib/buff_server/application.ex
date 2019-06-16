@@ -14,7 +14,7 @@ defmodule BuffServer.Application do
       BuffServerWeb.Endpoint,
       # Starts a worker by calling: BuffServer.Worker.start_link(arg)
       # {BuffServer.Worker, arg},
-      # TODO: move port to config arg
+      # TODO(danni): move port to config arg
       {GRPC.Server.Supervisor, {BuffServerGrpc.Endpoint, 50_051}}
     ]
 

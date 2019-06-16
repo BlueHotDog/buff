@@ -15,7 +15,7 @@ defmodule BuffServer.Accounts.User do
     field(:email, :string)
     field(:is_public_email_verified, :boolean, default: false)
     field(:is_email_verified, :boolean, default: false)
-    # TODO: figure out how :load_in_query works, seems like a proper use here
+    # TODO(danni): figure out how :load_in_query works, seems like a proper use here
     field(:password_hash, :string)
 
     # Virtual fields - We dont want to save them to the DB
