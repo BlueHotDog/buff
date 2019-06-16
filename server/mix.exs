@@ -81,7 +81,8 @@ defmodule BuffServer.MixProject do
       {:faker, "~> 0.12", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
-      {:junit_formatter, "~> 3.0", only: :test}
+      {:junit_formatter, "~> 3.0", only: :test},
+      {:inch_ex, only: :docs}
     ]
   end
 
