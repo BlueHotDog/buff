@@ -82,10 +82,8 @@ jobs:
           name: formatter
           command: mix format --check-formatted
       - run:
-          name: inch-ci
-          command: |
-            MIX_ENV=docs mix deps.get
-            MIX_ENV=docs mix inch.report
+          name: dialyzer
+          command: mix dialyzer
   test_server:
     parallelism: 1
     docker:
