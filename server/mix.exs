@@ -65,8 +65,10 @@ defmodule BuffServer.MixProject do
       # Overrides for GRPC to work..
       # more info here https://github.com/elixir-grpc/grpc/issues/100
       {:grpc, github: "tony612/grpc-elixir"},
-      {:cowboy, "~> 2.5", [env: :prod, hex: "cowboy", repo: "hexpm", optional: false, override: true]},
-      {:cowlib, "~> 2.7.3", [env: :prod, hex: "cowlib", repo: "hexpm", optional: false, override: true]},
+      {:cowboy, "~> 2.5",
+       [env: :prod, hex: "cowboy", repo: "hexpm", optional: false, override: true]},
+      {:cowlib, "~> 2.7.3",
+       [env: :prod, hex: "cowlib", repo: "hexpm", optional: false, override: true]},
       {:gun, "~> 1.3", override: true},
       # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
@@ -80,7 +82,7 @@ defmodule BuffServer.MixProject do
       {:ex_machina, "~> 2.3", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
       {:junit_formatter, "~> 3.0", only: :test},
-      {:inch_ex, only: :docs}
+      {:inch_ex, only: [:dev, :test]}
     ]
   end
 
