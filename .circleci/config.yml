@@ -100,6 +100,7 @@ jobs:
         environment:
           MINIO_ACCESS_KEY: minio
           MINIO_SECRET_KEY: minio123
+        command: ["server", "/data"]
     working_directory: ~/repo/server
     steps:
       - checkout:
