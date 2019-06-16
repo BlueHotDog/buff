@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/BlueHotDog/buff.svg?style=svg)](https://circleci.com/gh/BlueHotDog/buff)
 # buff - protocolBuffer Registry
 buff aims to provide an easy way to share, check and discover GRPC services.
 
