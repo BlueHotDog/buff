@@ -92,8 +92,14 @@ jobs:
       - image: circleci/elixir:1.8.2-otp-22
         environment:
           MIX_ENV: test
+          MINIO_HOST: minio
           CODECOV_TOKEN: d5e09a52-0017-457a-af70-5557b7d1faad
       - image: circleci/postgres:10-alpine-postgis-ram
+      - image: minio/minio:latest
+        name: minio
+        environment:
+          MINIO_ACCESS_KEY: minio
+          MINIO_SECRET_KEY: minio123
     working_directory: ~/repo/server
     steps:
       - checkout:
