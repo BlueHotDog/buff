@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.Minio.SetupTest do
   use BuffServer.MixCase, async: true
-  alias Mix.Tasks
+  alias Mix.Tasks.Minio
 
   describe "run/1" do
     test "runs successfully" do
