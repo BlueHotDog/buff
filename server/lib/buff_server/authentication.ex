@@ -18,8 +18,7 @@ defmodule BuffServer.Authentication do
     user = Accounts.get_by_email!(email)
     {:ok, user} = @password_hasher.check_pass(user, password, [])
 
-    {:ok, token, _claims} =
-      Token.generate_and_sign(%{"user_id" => user.id, "email" => user.email})
+    {:ok, token, _claims} = Token.generate_and_sign(%{"user_id" => user.id, "email" => user.email})
 
     {:ok, token}
   end

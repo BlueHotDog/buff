@@ -22,8 +22,7 @@ defmodule BuffServerGrpc.AuthServiceTest do
       user: user,
       user_params: user_params
     } do
-      login_req =
-        BuffServerGrpc.LoginRequest.new(email: user.email, password: user_params.password <> "a")
+      login_req = BuffServerGrpc.LoginRequest.new(email: user.email, password: user_params.password <> "a")
 
       get_client(AuthServer, fn channel ->
         assert {:error, %Elixir.GRPC.RPCError{message: "Incorrect credentials", status: 16}} ==
@@ -35,12 +34,10 @@ defmodule BuffServerGrpc.AuthServiceTest do
       user: user,
       user_params: user_params
     } do
-      login_req =
-        BuffServerGrpc.LoginRequest.new(email: user_params.email, password: user_params.password)
+      login_req = BuffServerGrpc.LoginRequest.new(email: user_params.email, password: user_params.password)
 
       get_client(AuthServer, fn channel ->
-        assert {:ok, %BuffServerGrpc.LoginResponse{token: token}} =
-                 AuthService.Stub.login(channel, login_req)
+        assert {:ok, %BuffServerGrpc.LoginResponse{token: token}} = AuthService.Stub.login(channel, login_req)
 
         user_id = user.id
         assert {:ok, %{"user_id" => ^user_id}} = AuthToken.verify_and_validate(token)
