@@ -15,10 +15,10 @@ config :ex_aws,
   http_client: ExAws.Request.HttpMock
 
 config :ex_aws, :s3,
-  host: "127.0.0.1",
+  host: System.get_env("MINIO_HOST") || "127.0.0.1",
   region: "local",
   scheme: "http://",
-  port: 9001,
+  port: 9000,
   http_client: ExAws.Request.HttpMock
 
 # Configure your database

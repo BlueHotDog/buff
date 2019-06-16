@@ -9,7 +9,7 @@ config :ex_aws, :s3,
   host: "127.0.0.1",
   region: "local",
   scheme: "http://",
-  port: 9001
+  port: 9000
 
 config :buff_server,
   s3_bucket_name: "buff-packages-development"
