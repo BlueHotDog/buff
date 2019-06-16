@@ -71,7 +71,7 @@ defmodule BuffServer.MixProject do
       {:gun, "~> 1.3", override: true},
       # Test/Dev stuff
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_unit_notifier, "~> 0.1", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
