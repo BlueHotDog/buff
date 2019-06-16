@@ -52,6 +52,7 @@ jobs:
           path: ~/repo/
       - run: mix local.hex --force
       - run: mix local.rebar --force
+      - setup_remote_docker
       - run: docker-compose up -d
       - restore_cache:
           keys:
@@ -87,6 +88,7 @@ jobs:
           path: ~/repo/
       - run: mix local.hex --force
       - run: mix local.rebar --force
+      - setup_remote_docker
       - run: docker-compose up -d
       - restore_cache:
           keys:
