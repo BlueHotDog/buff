@@ -59,8 +59,6 @@ jobs:
           path: ~/repo/
       - run: mix local.hex --force
       - run: mix local.rebar --force
-      - setup_remote_docker
-      - run: docker-compose up -d
       - restore_cache:
           keys:
             - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
@@ -95,8 +93,6 @@ jobs:
           path: ~/repo/
       - run: mix local.hex --force
       - run: mix local.rebar --force
-      - setup_remote_docker
-      - run: docker-compose up -d
       - restore_cache:
           keys:
             - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
