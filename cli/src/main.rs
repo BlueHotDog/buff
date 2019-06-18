@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate clap;
+mod artifact;
 
 use clap::{App, AppSettings, Arg, SubCommand};
 
@@ -17,7 +18,6 @@ fn main() {
         _ => (),                                // Either no subcommand or one not tested for...
     };
 }
-
 
 fn login_sub_command<'a, 'b>() -> clap::App<'a, 'b> {
     return SubCommand::with_name("login").about("Login to buff").arg(

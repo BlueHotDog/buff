@@ -1,0 +1,6 @@
+[package]
+name = "test_package"
+authors = ["Morty Smith <morty@smith.com>"]
+
+[dependencies]
+yummy_package = "1.0"
