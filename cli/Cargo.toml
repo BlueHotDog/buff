@@ -11,6 +11,9 @@ clap = "2.33.0"
 tar = "0.4"
 walkdir = "2"
 ignore = "0.4.7"
+toml = "0.5.1"
+serde = "1.0.92"
+serde_derive = "1.0.92"
 tempfile = "3.0.8"
 flate2 = { version = "1.0", features = ["zlib"], default-features = false }
 
