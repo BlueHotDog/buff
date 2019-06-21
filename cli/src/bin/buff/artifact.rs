@@ -1,12 +1,9 @@
-use std::path::Path;
-use ignore::Walk;
 use std::fs::File;
+use std::io::{BufReader, Write, Read, SeekFrom, Seek};
+use flate2::{bufread::GzEncoder, Compression};
+use ignore::Walk;
 use tar::Builder;
 use tempfile::tempfile;
-use flate2::Compression;
-use std::io::BufReader;
-use flate2::bufread::GzEncoder;
-use std::io::{Write, Read, SeekFrom, Seek};
 
 pub fn create_artifact(path: &str, output_path: &str) {
   // note(itay): The ignore crate uses the .gitignore file and also a .ignore file
@@ -50,7 +47,7 @@ fn save_buffer_to_file(buffer: Vec<u8>, path: &str) {
 fn should_create_artifact() {
   let output_path = "/tmp/test_artifact.tar.gz";
   create_artifact("./tests/fixtures/test_artifact", output_path);
-  assert!(Path::new(output_path).exists());
+  assert!(std::path::Path::new(output_path).exists());
   let file = File::open(output_path).unwrap();
   assert_ne!(file.metadata().unwrap().len(), 0);
   std::fs::remove_file(output_path).unwrap();

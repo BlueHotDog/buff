@@ -3,17 +3,37 @@
 [package]
 name = "buffcli"
 version = "0.1.0"
-authors = ["BlueHotDog <BlueHotDog@users.noreply.github.com>"]
+authors = ["BlueHotDog <BlueHotDog@users.noreply.github.com>", "@itayad"]
 edition = "2018"
+build = "build.rs"
 
 [dependencies]
+quicli = "0.4"
+structopt = "0.2"
 clap = "2.33.0"
 tar = "0.4"
-walkdir = "2"
 ignore = "0.4.7"
+toml = "0.5.1"
 tempfile = "3.0.8"
+tempdir = "0.3.7"
 flate2 = { version = "1.0", features = ["zlib"], default-features = false }
+grpcio = "0.4"
+futures = "0.1.27"
+protobuf = "2.6.2"
+config = "0.9"
+serde = "1.0.93"
+serde_derive = "1.0.93"
+dirs = "2.0.1"
 
 [dev-dependencies]
 assert_cmd = "0.11.1"
 rexpect = "0.3.0"
+
+[build-dependencies]
+protoc-grpcio = "1.0.2"
+
+[[bin]]
+name = "buff"
+test = true
+doc = false
+
