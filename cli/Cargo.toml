@@ -1,19 +1,5 @@
-#![allow(unknown_lints)]
-#![warn(clippy)]
-[package]
-name = "buffcli"
-version = "0.1.0"
-authors = ["BlueHotDog <BlueHotDog@users.noreply.github.com>"]
-edition = "2018"
-
-[dependencies]
-clap = "2.33.0"
-tar = "0.4"
-walkdir = "2"
-ignore = "0.4.7"
-tempfile = "3.0.8"
-flate2 = { version = "1.0", features = ["zlib"], default-features = false }
-
-[dev-dependencies]
-assert_cmd = "0.11.1"
-rexpect = "0.3.0"
+[workspace]
+members = [
+  "buffcli",
+  "bufflib",
+]

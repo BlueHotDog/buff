@@ -3,4 +3,5 @@ defmodule BuffServerGrpc.Endpoint do
 
   intercept(GRPC.Logger.Server)
   run(BuffServerGrpc.AuthService.Server)
+  run(BuffServerGrpc.RegistryService.Server)
 end

@@ -1,0 +1,2 @@
+[buff_grpc_server]
+url="localhost:50051"

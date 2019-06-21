@@ -5,6 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Buff CLI (rust)",
+      "program": "${workspaceFolder}/cli/target/debug/buff",
+      "args": [
+        "login",
+        "--email",
+        "test@test.com",
+        "--password",
+        "password"
+      ],
+      "cwd": "${workspaceFolder}/cli",
+    },
+    {
       "type": "mix_task",
       "name": "mix (Default task)",
       "request": "launch",
@@ -15,11 +29,18 @@
       "name": "mix test",
       "request": "launch",
       "task": "test",
-      "taskArgs": ["--trace"],
+      "taskArgs": [
+        "--trace"
+      ],
       "startApps": true,
       "projectDir": "${workspaceRoot}/buff_server",
-      "requireFiles": ["test/**/test_helper.exs", "test/**/*_test.exs"],
-      "excludeModules": ["Argon2.Base"]
+      "requireFiles": [
+        "test/**/test_helper.exs",
+        "test/**/*_test.exs"
+      ],
+      "excludeModules": [
+        "Argon2.Base"
+      ]
     }
   ]
 }

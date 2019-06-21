@@ -6,6 +6,9 @@ service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse) {}
 }
 
+service RegistryService {
+  rpc Publish (PublishRequest) returns (PublishResponse) {}
+}
 
 message LoginRequest {
   string email = 1;
@@ -15,4 +18,20 @@ message LoginRequest {
 // The response message containing the JWT token.
 message LoginResponse {
   string token = 1;
+}
+
+message Package {
+  string name = 1;
+  string description = 2;
+  string homepage = 3;
+  string repository_url = 4;
+  repeated string keywords = 5;
+}
+
+message PublishRequest {
+  bytes artifact = 1;
+}
+
+message PublishResponse {
+  bool result = 1;
 }

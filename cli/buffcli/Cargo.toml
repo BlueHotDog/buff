@@ -1,0 +1,20 @@
+[package]
+name = "buffcli"
+version = "0.1.0"
+authors = ["BlueHotDog <BlueHotDog@users.noreply.github.com>", "@itayad"]
+edition = "2018"
+
+[dependencies]
+quicli = "0.4"
+structopt = "0.2"
+bufflib = { path = "../bufflib" }
+
+[dev-dependencies]
+assert_cmd = "0.11.1"
+rexpect = "0.3.0"
+
+[[bin]]
+name = "buff"
+test = true
+doc = false
+

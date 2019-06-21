@@ -55,6 +55,7 @@ defmodule BuffServer.MixProject do
       {:comeonin, "~> 5.1"},
       {:joken, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
+      {:toml, "~> 0.5.2"},
       # required by ex_aws_s3
       {:ex_aws, "~> 2.0"},
       # required by ex_aws_s3

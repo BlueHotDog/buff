@@ -1,35 +1,42 @@
-extern crate tar;
-extern crate ignore;
-use std::path::Path;
+use flate2::{bufread::GzEncoder, Compression};
 use ignore::Walk;
 use std::fs::File;
+use std::io::{BufReader, Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
 use tar::Builder;
 use tempfile::tempfile;
-use flate2::Compression;
-use std::io::BufReader;
-use flate2::bufread::GzEncoder;
-use std::io::{Write, Read, SeekFrom, Seek};
 
-pub fn create_artifact(path: &str, output_path: &str) {
+pub fn get_artifact_bytes(path: &str) -> Vec<u8> {
   // note(itay): The ignore crate uses the .gitignore file and also a .ignore file
   // if specified by default, so basically like walkdir but already baked with the
   // logic we had in mind.
   let artifact_files = ignore::Walk::new(path);
-  let tar = create_tar(artifact_files);
-  let compressed_tar = get_compressed_tar(tar);
-  save_buffer_to_file(compressed_tar, output_path);
-} 
+  let tar = create_tar(artifact_files, Path::new(path).to_path_buf());
+  get_compressed_tar(tar)
+}
 
-fn create_tar(files_to_tar: Walk) -> File {
+pub fn save_artifact_to_path(path: &str, output_path: &str) {
+  let compressed_tar = get_artifact_bytes(path);
+  save_buffer_to_file(compressed_tar, output_path);
+}
+
+fn create_tar(files_to_tar: Walk, tar_path_root: PathBuf) -> File {
   let mut tar_file = tempfile().unwrap();
   {
     let mut tar_builder = Builder::new(&tar_file);
     for file in files_to_tar {
       let entry = file.unwrap();
-      // println!("{}", entry.path().display());
-      tar_builder.append_path(entry.path()).unwrap();
+      let path = entry.path();
+      let stripped_path = path.strip_prefix(tar_path_root.as_path()).unwrap();
+      if stripped_path.to_str().unwrap().len() == 0 {
+        tar_builder.append_path_with_name(path, "./").unwrap()
+      } else {
+        tar_builder
+          .append_path_with_name(path, stripped_path)
+          .unwrap()
+      }
     }
-    tar_builder.finish().unwrap();
+    tar_builder.into_inner().unwrap();
   }
   &mut tar_file.seek(SeekFrom::Start(0)).unwrap();
   return tar_file;
@@ -49,10 +56,10 @@ fn save_buffer_to_file(buffer: Vec<u8>, path: &str) {
 }
 
 #[test]
-fn should_create_artifact() {
+fn should_save_artifact_to_path() {
   let output_path = "/tmp/test_artifact.tar.gz";
-  create_artifact("./tests/fixtures/test_artifact", output_path);
-  assert!(Path::new(output_path).exists());
+  save_artifact_to_path("tests/fixtures/test_artifact", output_path);
+  assert!(std::path::Path::new(output_path).exists());
   let file = File::open(output_path).unwrap();
   assert_ne!(file.metadata().unwrap().len(), 0);
   std::fs::remove_file(output_path).unwrap();
