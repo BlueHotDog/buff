@@ -1,138 +1,144 @@
 version: 2
+
+
+install_docker_compose: &install_docker_compose
+  name: Install Docker Compose
+  command: |
+    curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+    chmod +x ~/docker-compose
+    sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+docker_config: &docker_config
+  parallelism: 1
+  docker:
+    - image: circleci/elixir:1.8.2-otp-22
+      environment:
+        MIX_ENV: test
+        MINIO_HOST: minio
+    - image: circleci/postgres:10-alpine-postgis-ram
+
+restore_repo: &restore_repo
+  restore_cache:
+    keys:
+      - v1-repo-{{ .Branch }}-{{ .Revision }}
+      - v1-repo-{{ .Branch }}
+      - v1-repo
+
+restore_mix_deps: &restore_mix_deps
+  restore_cache:
+    keys:
+      - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      - v1-mix-cache-{{ .Branch }}
+      - v1-mix-cache
+
+restore_server_build: &restore_server_build
+  restore_cache:
+    keys:
+      - v1-server-build-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      - v1-server-build-cache-{{ .Branch }}
+      - v1-server-build-cache
+
+# - run:
+#     name: "Install Docker Compose"
+#     command: |
+#       curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+#       chmod +x ~/docker-compose
+#       sudo mv ~/docker-compose /usr/local/bin/docker-compose
 jobs:
-  build_server:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8.2-otp-22
-        environment:
-          MIX_ENV: test
-          MINIO_HOST: minio
-      - image: circleci/postgres:10-alpine-postgis-ram
-      - image: minio/minio:latest
-        name: minio
-        environment:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        command: ["server", "/data"]
-    working_directory: ~/repo/server
+  checkout_code:
+    <<: *docker_config
+    working_directory: "/tmp/repo"
     steps:
+      - *restore_repo
       - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
-      - run: mix do deps.get, compile --warnings-as-errors
+          path: "/tmp/repo/"
+      - run: git gc
+      - save_cache:
+          key: v1-repo-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "/tmp/repo/"
+
+  build_server:
+    <<: *docker_config
+    working_directory: "/tmp/repo/server"
+    steps:
+      - *restore_repo
+      - *restore_mix_deps
+      - run: "mix local.hex --force"
+      - run: "mix local.rebar --force"
+      - run: "mix do deps.get, compile --warnings-as-errors"
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: deps
+          paths:
+            - "/tmp/repo/server/_build"
+            - "/tmp/repo/server/deps"
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}
-          paths: deps
+          paths:
+            - "/tmp/repo/server/_build"
+            - "/tmp/repo/server/deps"
       - save_cache:
           key: v1-mix-cache
-          paths: deps
-      - save_cache:
-          key: v1-build-cache-{{ .Branch }}
-          paths: _build
-      - save_cache:
-          key: v1-build-cache
-          paths: _build
+          paths:
+            - "/tmp/repo/server/_build"
+            - "/tmp/repo/server/deps"
 
-  analyze_server:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8.2-otp-22
-        environment:
-          MIX_ENV: test
-          MINIO_HOST: minio
-      - image: circleci/postgres:10-alpine-postgis-ram
-      - image: minio/minio:latest
-        name: minio
-        environment:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        command: ["server", "/data"]
-    working_directory: ~/repo/server
+  # build_server_nodejs_deps:
+  #   <<: *docker_config
+  #   working_directory: ~/repo/server
+  #   steps:
+  #     - *restore_repo
+  #     # TODO when needed
+
+  test:
+    <<: *docker_config
+    working_directory: "/tmp/repo/server"
     steps:
-      - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
+      - *restore_repo
+      - *restore_mix_deps
+      - run: "mix local.hex --force"
+      - run: "mix local.rebar --force"
+      - run: *install_docker_compose
+      - setup_remote_docker
       - run:
-          name: Credo
-          command: mix credo --strict --ignore todo
-      - run:
-          name: formatter
-          command: mix format --check-formatted
-      - run:
-          name: dialyzer
-          command: mix dialyzer
-  test_server:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8.2-otp-22
-        environment:
-          MIX_ENV: test
-          MINIO_HOST: minio
-          CODECOV_TOKEN: d5e09a52-0017-457a-af70-5557b7d1faad
-      - image: circleci/postgres:10-alpine-postgis-ram
-      - image: minio/minio:latest
-        name: minio
-        environment:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        command: ["server", "/data"]
-    working_directory: ~/repo/server
-    steps:
-      - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
+          name: Start container and verify it is working
+          command: |
+            set -x
+            docker-compose up -d
+            docker run --network container:contacts \
+              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://minio:9000
       - restore_cache:
           keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
+            - v1-plt-cache-{{ checksum "mix.lock" }}
+            - v1-plt-cache
+      - run: mkdir -p /tmp/server_junit/
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: mkdir -p /tmp/server_junit/
-      - run: mix coveralls.json
+      - run: "mix quality.ci"
+      - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
+      - store_artifacts:
+          path: ./cover
       - run: bash <(curl -s https://codecov.io/bash)
-      - run: mix test --formatter JUnitFormatter
       - store_test_results:
           path: /tmp/server_junit
       - store_artifacts:
           path: /tmp/server_junit
+      - save_cache:
+          key: v1-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - ~/.mix
+
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_server
-      - analyze_server:
+      - checkout_code
+      - build_server:
           requires:
-            - build_server
-      - test_server:
+            - checkout_code
+      - test:
           requires:
             - build_server
