@@ -14,7 +14,7 @@ docker_config: &docker_config
     - image: circleci/elixir:1.8.2-otp-22
       environment:
         MIX_ENV: test
-        MINIO_HOST: minio
+        MINIO_HOST: "127.0.01"
     - image: circleci/postgres:10-alpine-postgis-ram
 
 restore_repo: &restore_repo
