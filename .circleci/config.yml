@@ -116,13 +116,12 @@ jobs:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: mix coveralls.json
-      - run: mix coveralls.html
       - run: bash <(curl -s https://codecov.io/bash)
+      - run: mix coveralls.html
       - run: mix test --formatter JUnitFormatter
       - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
       - store_artifacts:
           path: ./cover
-      - run: bash <(curl -s https://codecov.io/bash)
       - store_test_results:
           path: /tmp/server_junit
       - store_artifacts:
