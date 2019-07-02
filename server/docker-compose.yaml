@@ -1,6 +1,7 @@
 version: "2"
 services:
  minio:
+  container_name: minio
   image: minio/minio:latest
   volumes:
    - minio-data:/data
