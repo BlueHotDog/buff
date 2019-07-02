@@ -19,3 +19,29 @@ GRPC allows companies to build scalabale and backwards compatible services easil
 # Project structure
 The project is split into two parts CLI and Server, each containing their respective documentation.
 
+
+# MVP
+
+- [ ] Auth works - Danni
+  - [ ] Maybe SSO
+  - [ ] Maybe 2FA
+- [ ] Login/Logout/Signup - Danni
+- [ ] 100% E2E tests
+- [ ] 100% test coverage
+- [ ] Awesome CI/CD pipeline including releases etc - Danni
+- [ ] Good CLI error messages - Itay
+- [ ] Exception/Error monitoring
+- [ ] Backwards comp check
+- [ ] History - Itay
+- [ ] Frontend
+  - [ ] Documentation
+    - [ ] Onboarding(create S3 bucket etc, DB)
+    - [ ] Helm chart?
+  - [ ] Getting Started
+  - [ ] TOS
+  - [ ] COC
+  - [ ] Search
+  - [ ] Package view
+    - [ ] Versions
+    - [ ] GRPC Explorer interface - allow users to make calls to the GRPC service
+  - [ ] Package readme
