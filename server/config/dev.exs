@@ -6,7 +6,7 @@ config :ex_aws,
   secret_access_key: "minio123"
 
 config :ex_aws, :s3,
-  host: "127.0.0.1",
+  host: "minio",
   region: "local",
   scheme: "http://",
   port: 9000
@@ -19,7 +19,7 @@ config :buff_server, BuffServer.Repo,
   username: "postgres",
   password: "postgres",
   database: "buff_server_dev",
-  hostname: "localhost",
+  hostname: "postgres",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 

@@ -1,0 +1,60 @@
+version: '3.7'
+services:
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    volumes:
+      - ./.docker/data/minio:/data
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data
+
+  postgres:
+    image: postgres:11-alpine
+    container_name: buff_postgres
+    restart: always
+    ports:
+      - 15432:5432
+    volumes:
+      - ./.docker/data/postgres:/var/lib/postgresql/data
+
+  webpack:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/Dockerfile
+      target: "webpack"
+    container_name: buff_webpack
+    restart: unless-stopped
+    command: yarn run watch
+    volumes:
+      - ./server:/app
+      - ./server/priv/static:/app/priv/static
+
+  app:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      dockerfile: ./.docker/dev/Dockerfile
+      target: "app"
+    container_name: buff_app
+    ports:
+      - 4000:4000
+    command: tail -f /dev/null
+    volumes:
+      - ./server:/app
+      - ./server/static:/app/priv/static
+      - ./server/deps:/app/deps
+      - ./server/build:/app/_build
+    depends_on:
+      - postgres
+      - webpack
+
+volumes:
+  static: {}
+  deps: {}
+  build: {}
+  minio-data: {}

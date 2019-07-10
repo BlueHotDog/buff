@@ -19,6 +19,10 @@ GRPC allows companies to build scalabale and backwards compatible services easil
 # Project structure
 The project is split into two parts CLI and Server, each containing their respective documentation.
 
+# Getting started
+
+- Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+
 
 # MVP
 
