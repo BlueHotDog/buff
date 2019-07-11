@@ -9,12 +9,12 @@ RUN apk --update --upgrade add ca-certificates build-base bash \
 
 WORKDIR /app/assets
 
-COPY server/assets/package.json assets/*yarn* ./
-COPY server/deps /app/deps
+COPY ./server/assets/package.json assets/*yarn* ./
+COPY ./server/deps /app/deps
 
 RUN yarn install
 
-COPY server/assets .
+COPY ./server/assets .
 
 ENV NODE_ENV="development"
 

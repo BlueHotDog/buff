@@ -1,0 +1,5 @@
+server/.elixir_ls
+server/cover
+server/.vscode
+protobuffers
+cli

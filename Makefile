@@ -6,11 +6,11 @@ app:
 setup: app
 	docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
 
+test.watch: app
+	docker-compose exec app mix test.watch
+
 server: setup
 	docker-compose exec app mix phx.server
-
-grpc: setup
-	docker-compose exec app mix grpc
 
 console: setup
 	docker-compose exec app iex -S mix

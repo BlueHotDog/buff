@@ -1,0 +1,9 @@
+{application,joken,
+             [{applications,[kernel,stdlib,elixir,logger,crypto,jose]},
+              {description,"JWT (JSON Web Token) library for Elixir\n"},
+              {modules,['Elixir.Joken','Elixir.Joken.Claim',
+                        'Elixir.Joken.Config','Elixir.Joken.CurrentTime',
+                        'Elixir.Joken.CurrentTime.OS','Elixir.Joken.Error',
+                        'Elixir.Joken.Hooks','Elixir.Joken.Signer']},
+              {registered,[]},
+              {vsn,"2.1.0"}]}.
