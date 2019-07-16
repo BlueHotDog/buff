@@ -51,7 +51,7 @@ jobs:
           path: "/tmp/repo/"
       - run: git gc
       - save_cache:
-          key: v1-repo-{{ .Branch }}-{{ .Revision }}
+          key: v2-repo-{{ .Branch }}-{{ .Revision }}
           paths:
             - "/tmp/repo/"
 
