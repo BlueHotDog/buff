@@ -65,6 +65,7 @@ jobs:
       - run: docker-compose build --build-arg MIX_ENV=test app
       - run: docker-compose up --no-deps --no-start --no-build app
       - run: docker cp `docker-compose ps -q app`:/app/deps .
+      - run: chown -R $USER:$USER .
       - run: docker cp `docker-compose ps -q app`:/app/_build .
       - save_mix_deps
 
