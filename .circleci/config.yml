@@ -33,13 +33,12 @@ restore_server_build: &restore_server_build
 #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
 executors:
-  my-docker:
+  my_docker:
     docker:
-      - image: circleci/elixir:1.9.0-otp-22
+      - image: circleci/elixir:1.9.0
         environment:
           MIX_ENV: test
           MINIO_HOST: "127.0.01"
-      - image: circleci/postgres:10-alpine-postgis-ram
 
 commands:
   restore_repo:
@@ -52,7 +51,7 @@ commands:
 
 jobs:
   checkout_code:
-    executor: my-docker
+    executor: my_docker
     working_directory: "/tmp/repo"
     steps:
       - restore_repo
