@@ -68,6 +68,7 @@ jobs:
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
+      - run: docker-compose up --detach app
       - run: docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
       - run: docker-compose exec app mix test
 
