@@ -11,7 +11,7 @@ restore_server_build: &restore_server_build
 executors:
   my_exec:
     machine:
-      image: circleci/classic:201808-01
+      image: ubuntu-1604:201903-01
       docker_layer_caching: true    # default - false
     environment:
       MIX_ENV: test

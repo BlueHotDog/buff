@@ -34,8 +34,6 @@ services:
       - ./server/priv/static:/app/priv/static:delegated
 
   app:
-    stdin_open: true
-    tty: true
     build:
       context: .
       dockerfile: ./.docker/dev/Dockerfile
