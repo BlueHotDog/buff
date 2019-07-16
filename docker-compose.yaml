@@ -52,19 +52,6 @@ services:
       - postgres
       # - webpack
       - minio
-
-  test:
-    build:
-      context: .
-      dockerfile: ./.docker/dev/Dockerfile
-      target: "app"
-    command: mix test
-    environment:
-      - MIX_ENV=test
-    depends_on:
-      - postgres
-      # - webpack
-      - minio
 volumes:
 #   static: {}
   deps: {}
