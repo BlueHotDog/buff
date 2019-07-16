@@ -32,7 +32,7 @@ commands:
           paths:
             - deps
 
-  restore_mix_deps:
+  load_mix_deps:
     steps:
       - restore_cache:
           keys:
@@ -60,7 +60,9 @@ jobs:
     steps:
       - restore_repo
       - run: mkdir deps
+      - load_mix_deps
       - run: docker-compose build --build-arg MIX_ENV=test app
+      - save_mix_deps
 
 
   test:
@@ -68,6 +70,7 @@ jobs:
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
+      - load_mix_deps
       - run: docker-compose run -e MIX_ENV=test app /wait-for-postgres.sh postgres mix ecto.setup
       - run: docker-compose run -e MIX_ENV=test app mix test
 
