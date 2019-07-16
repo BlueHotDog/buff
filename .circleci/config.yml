@@ -39,13 +39,6 @@ commands:
             - v1-repo-{{ .Branch }}-{{ .Revision }}
             - v1-repo-{{ .Branch }}
             - v1-repo
-  restore_mix_deps:
-    steps:
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
 
 jobs:
   checkout_code:
@@ -66,7 +59,6 @@ jobs:
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
-      - restore_mix_deps
       - run: docker-compose build app
 
   test:
@@ -74,7 +66,7 @@ jobs:
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
-      - restore_mix_deps
+      - run: docker-compose up --detach app
       - run: docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
       - run: docker-compose exec app mix test
 
