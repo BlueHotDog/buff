@@ -60,15 +60,15 @@ jobs:
           paths:
             - "/tmp/repo/"
 
-build_server:
-  executor: my_docker
-  working_directory: "/tmp/repo/server"
-  steps:
-    - restore_repo
-    - restore_mix_deps
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run: docker-compose build app
+  build_server:
+    executor: my_docker
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_repo
+      - restore_mix_deps
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: docker-compose build app
 
   # # build_server_nodejs_deps:
   # #   <<: *docker_config
