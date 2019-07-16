@@ -45,8 +45,8 @@ services:
     volumes:
       - ./server:/app:cached
       - ./server/priv/static:/app/priv/static:delegated
-      - ./server/deps:/app/deps:delegated
-      - ./server/build:/app/_build:delegated
+      # - ./server/deps:/app/deps:delegated
+      - ./server/_build:/app/_build:delegated
     depends_on:
       - postgres
       - webpack
