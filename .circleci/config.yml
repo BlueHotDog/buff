@@ -83,7 +83,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose run -v ./cover:/app/cover -e MIX_ENV=test app mix coveralls.json && bash <(curl -s https://codecov.io/bash) && mix coveralls.html
+      - run: docker-compose run -e MIX_ENV=test app mix coveralls.json && bash <(curl -s https://codecov.io/bash) && mix coveralls.html
       - store_artifacts:
           path: ./cover
   test_junit:
