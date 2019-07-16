@@ -60,7 +60,7 @@ jobs:
     steps:
       - restore_repo
       - run: mkdir deps
-      - run: docker-compose build app
+      - run: docker-compose build --build-arg MIX_ENV=test app
 
 
   test:

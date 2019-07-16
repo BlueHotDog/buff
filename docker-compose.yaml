@@ -41,19 +41,19 @@ services:
     container_name: buff_app
     ports:
       - 4000:4000
-    command: mix phx.server
+    command: mix do deps.get, deps.compile, phx.server
     volumes:
-      - ./server:/app:cached
-      - ./server/priv/static:/app/priv/static:delegated
+      - ./server:/app:delegated
       # - ./server/deps:/app/deps:delegated
-      - ./server/_build:/app/_build:delegated
+      # - ./server/_build:/app/_build:delegated
+      # - ./server/priv/static:/app/priv/static:delegated
     depends_on:
       - postgres
-      - webpack
+      # - webpack
       - minio
 
-volumes:
-  static: {}
-  deps: {}
-  build: {}
-  minio-data: {}
+# volumes:
+#   static: {}
+#   deps: {}
+#   build: {}
+#   minio-data: {}
