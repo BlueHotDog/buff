@@ -28,7 +28,7 @@ commands:
   save_mix_deps:
     steps:
       - save_cache:
-          key: v3-mix-cache-{{ checksum "mix.lock" }}
+          key: v5-mix-cache-{{ checksum "mix.lock" }}
           paths:
             - deps
             - _build
@@ -37,8 +37,8 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v3-mix-cache-{{ checksum "mix.lock" }}
-            - v3-mix-cache
+            - v5-mix-cache-{{ checksum "mix.lock" }}
+            - v5-mix-cache
 
 
 jobs:
@@ -65,6 +65,7 @@ jobs:
       - run: docker-compose build --build-arg MIX_ENV=test app
       - run: docker-compose up -d app
       - run: docker cp `docker-compose ps -q app`:/app/deps ./deps
+      - run: docker cp `docker-compose ps -q app`:/app/_build ./_build
       - save_mix_deps
 
 
