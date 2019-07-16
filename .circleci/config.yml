@@ -8,16 +8,6 @@ install_docker_compose: &install_docker_compose
     chmod +x ~/docker-compose
     sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
-restore_repo: &restore_repo
-
-
-restore_mix_deps: &restore_mix_deps
-  restore_cache:
-    keys:
-      - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-      - v1-mix-cache-{{ .Branch }}
-      - v1-mix-cache
-
 restore_server_build: &restore_server_build
   restore_cache:
     keys:
@@ -48,6 +38,13 @@ commands:
             - v1-repo-{{ .Branch }}-{{ .Revision }}
             - v1-repo-{{ .Branch }}
             - v1-repo
+  restore_mix_deps:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}
+            - v1-mix-cache
 
 jobs:
   checkout_code:
@@ -63,30 +60,15 @@ jobs:
           paths:
             - "/tmp/repo/"
 
-  # build_server:
-  #   <<: *docker_config
-  #   working_directory: "/tmp/repo/server"
-  #   steps:
-  #     - *restore_repo
-  #     - *restore_mix_deps
-  #     - run: "mix local.hex --force"
-  #     - run: "mix local.rebar --force"
-  #     - run: "mix do deps.get, compile --warnings-as-errors"
-  #     - save_cache:
-  #         key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-  #         paths:
-  #           - "/tmp/repo/server/_build"
-  #           - "/tmp/repo/server/deps"
-  #     - save_cache:
-  #         key: v1-mix-cache-{{ .Branch }}
-  #         paths:
-  #           - "/tmp/repo/server/_build"
-  #           - "/tmp/repo/server/deps"
-  #     - save_cache:
-  #         key: v1-mix-cache
-  #         paths:
-  #           - "/tmp/repo/server/_build"
-  #           - "/tmp/repo/server/deps"
+build_server:
+  executor: my_docker
+  working_directory: "/tmp/repo/server"
+  steps:
+    - restore_repo
+    - restore_mix_deps
+    - setup_remote_docker:
+      docker_layer_caching: true
+    - run: docker-compose build app
 
   # # build_server_nodejs_deps:
   # #   <<: *docker_config
