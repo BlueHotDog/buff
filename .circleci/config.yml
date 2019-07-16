@@ -67,8 +67,6 @@ jobs:
     steps:
       - restore_repo
       - restore_mix_deps
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: docker-compose build app
 
   # # build_server_nodejs_deps:
