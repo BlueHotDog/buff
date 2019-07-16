@@ -1,26 +1,12 @@
 version: 2.1
 
 
-install_docker_compose: &install_docker_compose
-  name: Install Docker Compose
-  command: |
-    curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-    chmod +x ~/docker-compose
-    sudo mv ~/docker-compose /usr/local/bin/docker-compose
-
 restore_server_build: &restore_server_build
   restore_cache:
     keys:
       - v1-server-build-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - v1-server-build-cache-{{ .Branch }}
       - v1-server-build-cache
-
-# - run:
-#     name: "Install Docker Compose"
-#     command: |
-#       curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-#       chmod +x ~/docker-compose
-#       sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
 executors:
   my_exec:
@@ -39,6 +25,20 @@ commands:
             - v1-repo-{{ .Branch }}-{{ .Revision }}
             - v1-repo-{{ .Branch }}
             - v1-repo
+  save_mix_deps:
+    steps:
+      - save_cache:
+          key: v1-mix-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+
+  restore_mix_deps:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-mix-cache-{{ checksum "mix.lock" }}
+            - v1-mix-cache
+
 
 jobs:
   checkout_code:
@@ -59,14 +59,15 @@ jobs:
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
+      - run: mkdir deps
       - run: docker-compose build app
+
 
   test:
     executor: my_exec
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
-      - run: docker-compose up --detach app
       - run: docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
       - run: docker-compose exec app mix test
 
