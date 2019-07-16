@@ -8,21 +8,8 @@ install_docker_compose: &install_docker_compose
     chmod +x ~/docker-compose
     sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
-docker_config: &docker_config
-  parallelism: 1
-  docker:
-    - image: circleci/elixir:1.8.2-otp-22
-      environment:
-        MIX_ENV: test
-        MINIO_HOST: "127.0.01"
-    - image: circleci/postgres:10-alpine-postgis-ram
-
 restore_repo: &restore_repo
-  restore_cache:
-    keys:
-      - v1-repo-{{ .Branch }}-{{ .Revision }}
-      - v1-repo-{{ .Branch }}
-      - v1-repo
+
 
 restore_mix_deps: &restore_mix_deps
   restore_cache:
@@ -44,12 +31,32 @@ restore_server_build: &restore_server_build
 #       curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
 #       chmod +x ~/docker-compose
 #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+executors:
+  my-docker:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.9.0-otp-22
+        environment:
+          MIX_ENV: test
+          MINIO_HOST: "127.0.01"
+      - image: circleci/postgres:10-alpine-postgis-ram
+
+commands:
+  restore_repo:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Branch }}-{{ .Revision }}
+            - v1-repo-{{ .Branch }}
+            - v1-repo
+
 jobs:
   checkout_code:
-    <<: *docker_config
+    executor: my-docker
     working_directory: "/tmp/repo"
     steps:
-      - *restore_repo
+      - restore_repo
       - checkout:
           path: "/tmp/repo/"
       - run: git gc
@@ -58,79 +65,79 @@ jobs:
           paths:
             - "/tmp/repo/"
 
-  build_server:
-    <<: *docker_config
-    working_directory: "/tmp/repo/server"
-    steps:
-      - *restore_repo
-      - *restore_mix_deps
-      - run: "mix local.hex --force"
-      - run: "mix local.rebar --force"
-      - run: "mix do deps.get, compile --warnings-as-errors"
-      - save_cache:
-          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths:
-            - "/tmp/repo/server/_build"
-            - "/tmp/repo/server/deps"
-      - save_cache:
-          key: v1-mix-cache-{{ .Branch }}
-          paths:
-            - "/tmp/repo/server/_build"
-            - "/tmp/repo/server/deps"
-      - save_cache:
-          key: v1-mix-cache
-          paths:
-            - "/tmp/repo/server/_build"
-            - "/tmp/repo/server/deps"
-
-  # build_server_nodejs_deps:
+  # build_server:
   #   <<: *docker_config
-  #   working_directory: ~/repo/server
+  #   working_directory: "/tmp/repo/server"
   #   steps:
   #     - *restore_repo
-  #     # TODO when needed
+  #     - *restore_mix_deps
+  #     - run: "mix local.hex --force"
+  #     - run: "mix local.rebar --force"
+  #     - run: "mix do deps.get, compile --warnings-as-errors"
+  #     - save_cache:
+  #         key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+  #         paths:
+  #           - "/tmp/repo/server/_build"
+  #           - "/tmp/repo/server/deps"
+  #     - save_cache:
+  #         key: v1-mix-cache-{{ .Branch }}
+  #         paths:
+  #           - "/tmp/repo/server/_build"
+  #           - "/tmp/repo/server/deps"
+  #     - save_cache:
+  #         key: v1-mix-cache
+  #         paths:
+  #           - "/tmp/repo/server/_build"
+  #           - "/tmp/repo/server/deps"
 
-  test:
-    <<: *docker_config
-    working_directory: "/tmp/repo/server"
-    steps:
-      - *restore_repo
-      - *restore_mix_deps
-      - run: "mix local.hex --force"
-      - run: "mix local.rebar --force"
-      - run: *install_docker_compose
-      - setup_remote_docker
-      - run:
-          name: Start container and verify it is working
-          command: |
-            set -x
-            docker-compose up -d
-            docker run --network container:minio \
-              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://minio:9000
-      - restore_cache:
-          keys:
-            - v1-plt-cache-{{ checksum "mix.lock" }}
-            - v1-plt-cache
-      - run: mkdir -p /tmp/server_junit/
-      - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: MIX_ENV=test mix coveralls.json
-      - run: bash <(curl -s https://codecov.io/bash)
-      - run: MIX_ENV=test mix coveralls.html
-      - run: mix test --formatter JUnitFormatter
-      - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
-      - store_artifacts:
-          path: ./cover
-      - store_test_results:
-          path: /tmp/server_junit
-      - store_artifacts:
-          path: /tmp/server_junit
-      - save_cache:
-          key: v1-plt-cache-{{ checksum "mix.lock" }}
-          paths:
-            - _build
-            - ~/.mix
+  # # build_server_nodejs_deps:
+  # #   <<: *docker_config
+  # #   working_directory: ~/repo/server
+  # #   steps:
+  # #     - *restore_repo
+  # #     # TODO when needed
+
+  # test:
+  #   <<: *docker_config
+  #   working_directory: "/tmp/repo/server"
+  #   steps:
+  #     - *restore_repo
+  #     - *restore_mix_deps
+  #     - run: "mix local.hex --force"
+  #     - run: "mix local.rebar --force"
+  #     - run: *install_docker_compose
+  #     - setup_remote_docker
+  #     - run:
+  #         name: Start container and verify it is working
+  #         command: |
+  #           set -x
+  #           docker-compose up -d
+  #           docker run --network container:minio \
+  #             appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://minio:9000
+  #     - restore_cache:
+  #         keys:
+  #           - v1-plt-cache-{{ checksum "mix.lock" }}
+  #           - v1-plt-cache
+  #     - run: mkdir -p /tmp/server_junit/
+  #     - run:
+  #         name: Wait for DB
+  #         command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  #     - run: MIX_ENV=test mix coveralls.json
+  #     - run: bash <(curl -s https://codecov.io/bash)
+  #     - run: MIX_ENV=test mix coveralls.html
+  #     - run: mix test --formatter JUnitFormatter
+  #     - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
+  #     - store_artifacts:
+  #         path: ./cover
+  #     - store_test_results:
+  #         path: /tmp/server_junit
+  #     - store_artifacts:
+  #         path: /tmp/server_junit
+  #     - save_cache:
+  #         key: v1-plt-cache-{{ checksum "mix.lock" }}
+  #         paths:
+  #           - _build
+  #           - ~/.mix
 
 
 workflows:
@@ -138,9 +145,9 @@ workflows:
   build_and_test:
     jobs:
       - checkout_code
-      - build_server:
-          requires:
-            - checkout_code
-      - test:
-          requires:
-            - build_server
+      # - build_server:
+      #     requires:
+      #       - checkout_code
+      # - test:
+      #     requires:
+      #       - build_server

@@ -1,7 +1,7 @@
-.PHONY: app server console sh clean
+.PHONY: app setup test.watch server console sh clean
 
 app:
-	docker-compose up --detach --build app
+	docker-compose up --detach app
 
 setup: app
 	docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
