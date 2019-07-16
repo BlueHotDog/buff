@@ -69,55 +69,37 @@ jobs:
       - run: docker cp `docker-compose ps -q app`:/app/_build .
       - save_mix_deps
 
-
-  test:
+  setup_db:
     executor: my_exec
     working_directory: "/tmp/repo/server"
     steps:
       - restore_repo
       - load_mix_deps
       - run: docker-compose run -e MIX_ENV=test app /wait-for-postgres.sh postgres mix ecto.setup
-      - run: docker-compose run -e MIX_ENV=test app mix test
 
-  # # build_server_nodejs_deps:
-  # #   <<: *docker_config
-  # #   working_directory: ~/repo/server
-  # #   steps:
-  # #     - *restore_repo
-  # #     # TODO when needed
+  coveralls:
+    executor: my_exec
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_repo
+      - load_mix_deps
+      - run: docker-compose run -v ./cover:/app/cover -e MIX_ENV=test app mix coveralls.json && bash <(curl -s https://codecov.io/bash) && mix coveralls.html
+      - store_artifacts:
+          path: ./cover
+  test_junit:
+    executor: my_exec
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_repo
+      - load_mix_deps
+      - run: docker-compose run -v /tmp/server_junit:/tmp/server_junit -e MIX_ENV=test app mix test --formatter JUnitFormatter
+      - store_test_results:
+          path: /tmp/server_junit
+      - store_artifacts:
+          path: /tmp/server_junit
 
-  # test:
-  #   <<: *docker_config
-  #   working_directory: "/tmp/repo/server"
-  #   steps:
-  #     - *restore_repo
-  #     - *restore_mix_deps
-  #     - run: "mix local.hex --force"
-  #     - run: "mix local.rebar --force"
-  #     - run: *install_docker_compose
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Start container and verify it is working
-  #         command: |
-  #           set -x
-  #           docker-compose up -d
-  #           docker run --network container:minio \
-  #             appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://minio:9000
-  #     - restore_cache:
-  #         keys:
-  #           - v1-plt-cache-{{ checksum "mix.lock" }}
-  #           - v1-plt-cache
-  #     - run: mkdir -p /tmp/server_junit/
-  #     - run:
-  #         name: Wait for DB
-  #         command: dockerize -wait tcp://localhost:5432 -timeout 1m
-  #     - run: MIX_ENV=test mix coveralls.json
-  #     - run: bash <(curl -s https://codecov.io/bash)
-  #     - run: MIX_ENV=test mix coveralls.html
-  #     - run: mix test --formatter JUnitFormatter
   #     - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
-  #     - store_artifacts:
-  #         path: ./cover
+
   #     - store_test_results:
   #         path: /tmp/server_junit
   #     - store_artifacts:
@@ -137,6 +119,12 @@ workflows:
       - build_server:
           requires:
             - checkout_code
-      - test:
+      - setup_db:
           requires:
             - build_server
+      - coveralls:
+          requires:
+            - setup_db
+      - test_junit:
+          requires:
+            - setup_db
