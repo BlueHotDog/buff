@@ -69,8 +69,8 @@ jobs:
     steps:
       - restore_repo
       - run: mkdir deps
-      - run: docker-compose run app /wait-for-postgres.sh postgres mix ecto.setup
-      - run: docker-compose run app mix test
+      - run: docker-compose run app MIX_ENV=test /wait-for-postgres.sh postgres mix ecto.setup
+      - run: docker-compose run app MIX_ENV=test mix test
 
   # # build_server_nodejs_deps:
   # #   <<: *docker_config
