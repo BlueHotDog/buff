@@ -44,6 +44,7 @@ services:
     command: mix do deps.get, deps.compile, phx.server
     volumes:
       - ./server:/app:delegated
+      - deps:/app/deps
       # - ./server/deps:/app/deps:delegated
       # - ./server/_build:/app/_build:delegated
       # - ./server/priv/static:/app/priv/static:delegated
@@ -52,8 +53,20 @@ services:
       # - webpack
       - minio
 
-# volumes:
+  test:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/Dockerfile
+      target: "app"
+    command: mix test
+    environment:
+      - MIX_ENV=test
+    depends_on:
+      - postgres
+      # - webpack
+      - minio
+volumes:
 #   static: {}
-#   deps: {}
+  deps: {}
 #   build: {}
 #   minio-data: {}
