@@ -69,6 +69,15 @@ jobs:
       - restore_mix_deps
       - run: docker-compose build app
 
+  test:
+    executor: my_exec
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_repo
+      - restore_mix_deps
+      - run: docker-compose exec app /wait-for-postgres.sh postgres mix ecto.setup
+      - run: docker-compose exec app mix test
+
   # # build_server_nodejs_deps:
   # #   <<: *docker_config
   # #   working_directory: ~/repo/server
@@ -127,6 +136,6 @@ workflows:
       - build_server:
           requires:
             - checkout_code
-      # - test:
-      #     requires:
-      #       - build_server
+      - test:
+          requires:
+            - build_server
