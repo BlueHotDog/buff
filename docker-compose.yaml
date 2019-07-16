@@ -19,7 +19,7 @@ services:
     ports:
       - 15432:5432
     volumes:
-      - ./.docker/data/postgres:/var/lib/postgresql/data:delegated
+      - postgres:/var/lib/postgresql/data:delegated
 
   webpack:
     build:
@@ -58,3 +58,4 @@ volumes:
   deps: {}
   _build: {}
   minio-data: {}
+  postgres: {}
