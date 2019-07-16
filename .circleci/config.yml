@@ -63,9 +63,9 @@ jobs:
       - run: mkdir deps
       - load_mix_deps
       - run: docker-compose build --build-arg MIX_ENV=test app
-      - run: docker-compose up -d app
-      - run: docker cp `docker-compose ps -q app`:/app/deps ./deps
-      - run: docker cp `docker-compose ps -q app`:/app/_build ./_build
+      - run: docker-compose up --no-deps --no-start --no-build app
+      - run: docker cp `docker-compose ps -q app`:/app/deps .
+      - run: docker cp `docker-compose ps -q app`:/app/_build .
       - save_mix_deps
 
 

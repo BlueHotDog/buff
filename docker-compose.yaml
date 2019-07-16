@@ -45,7 +45,7 @@ services:
     volumes:
       - ./server:/app:delegated
       - deps:/app/deps
-      - build:/app/buils
+      - _build:/app/_build
       # - ./server/deps:/app/deps:delegated
       # - ./server/_build:/app/_build:delegated
       # - ./server/priv/static:/app/priv/static:delegated
@@ -56,5 +56,5 @@ services:
 volumes:
 #   static: {}
   deps: {}
-  build: {}
+  _build: {}
   minio-data: {}
