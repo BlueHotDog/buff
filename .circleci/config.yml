@@ -22,13 +22,13 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v1-repo-{{ .Branch }}-{{ .Revision }}
-            - v1-repo-{{ .Branch }}
-            - v1-repo
+            - v2-repo-{{ .Branch }}-{{ .Revision }}
+            - v2-repo-{{ .Branch }}
+            - v2-repo
   save_mix_deps:
     steps:
       - save_cache:
-          key: v5-mix-cache-{{ checksum "mix.lock" }}
+          key: v6-mix-cache-{{ checksum "mix.lock" }}
           paths:
             - deps
             - _build
@@ -37,8 +37,8 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v5-mix-cache-{{ checksum "mix.lock" }}
-            - v5-mix-cache
+            - v6-mix-cache-{{ checksum "mix.lock" }}
+            - v6-mix-cache
 
 
 jobs:
