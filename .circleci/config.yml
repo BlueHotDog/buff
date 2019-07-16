@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 
 install_docker_compose: &install_docker_compose
