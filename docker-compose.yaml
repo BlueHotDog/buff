@@ -4,7 +4,7 @@ services:
     container_name: minio
     image: minio/minio:latest
     volumes:
-      - ./.docker/data/minio:/data:delegated
+      - minio-data:/data:delegated
     ports:
       - "9000:9000"
     environment:
@@ -56,5 +56,5 @@ services:
 volumes:
 #   static: {}
   deps: {}
-#   build: {}
-#   minio-data: {}
+  build: {}
+  minio-data: {}
