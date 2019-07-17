@@ -1,6 +1,5 @@
 version: 2.1
 
-
 restore_server_build: &restore_server_build
   restore_cache:
     keys:
@@ -12,12 +11,15 @@ executors:
   my_exec:
     machine:
       image: ubuntu-1604:201903-01
-      docker_layer_caching: true    # default - false
+      docker_layer_caching: true # default - false
     environment:
       MIX_ENV: test
       MINIO_HOST: "127.0.01"
 
 commands:
+  start_app:
+    steps:
+      - run: docker-compose up --no-build app
   restore_repo:
     steps:
       - restore_cache:
@@ -39,7 +41,6 @@ commands:
           keys:
             - v6-mix-cache-{{ checksum "mix.lock" }}
             - v6-mix-cache
-
 
 jobs:
   checkout_code:
@@ -83,7 +84,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose up --no-build app
+      - start_app
       - run: docker-compose exec app mix coveralls.json && mix coveralls.html
       - run: docker cp `docker-compose ps -q app`:/app/cover .
       - run: bash <(curl -s https://codecov.io/bash)
@@ -96,14 +97,15 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose run -v /tmp/server_junit:/tmp/server_junit -e MIX_ENV=test app mix test --formatter JUnitFormatter
+      - start_app
+      - run: docker-compose run -e MIX_ENV=test app mix test --formatter JUnitFormatter
+      - run: docker cp `docker-compose ps -q app`:/tmp/server_junit /tmp
       - store_test_results:
           path: /tmp/server_junit
       - store_artifacts:
           path: /tmp/server_junit
 
   #     - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
-
   #     - store_test_results:
   #         path: /tmp/server_junit
   #     - store_artifacts:
@@ -113,7 +115,6 @@ jobs:
   #         paths:
   #           - _build
   #           - ~/.mix
-
 
 workflows:
   version: 2
