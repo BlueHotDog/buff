@@ -110,6 +110,22 @@ jobs:
       - run: docker-compose run app mix do format --check-formatted, credo --strict
       - run: docker-compose run app mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats
 
+  dialyzer:
+    executor: my_exec
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_cache:
+          keys:
+            - v1-plt-cache-{{ checksum "mix.lock" }}
+            - v1-plt-cache
+      - run: docker-compose run --volume ${pwd}/_build:/app/_build app mix dialyzer --plt
+      - save_cache:
+          key: v1-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - ~/.mix
+      - run: docker-compose run --volume ${pwd}/_build:/app/_build app mix dialyzer
+
 workflows:
   version: 2
   build_and_test:
@@ -128,5 +144,8 @@ workflows:
           requires:
             - setup_db
       - quality:
+          requires:
+            - setup_db
+      - dialyzer:
           requires:
             - setup_db
