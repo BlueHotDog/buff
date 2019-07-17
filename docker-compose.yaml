@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   minio:
     container_name: minio
@@ -46,7 +46,6 @@ services:
       - ./server:/app:delegated
       - deps:/app/deps
       - build:/app/_build
-      - cover:/app/cover
       # - ./server/deps:/app/deps:delegated
       # - ./server/_build:/app/_build:delegated
       # - ./server/priv/static:/app/priv/static:delegated
@@ -55,9 +54,8 @@ services:
       # - webpack
       - minio
 volumes:
-#   static: {}
+  #   static: {}
   deps: {}
   build: {}
   minio-data: {}
   postgres: {}
-  cover: {}

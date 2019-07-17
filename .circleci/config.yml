@@ -84,8 +84,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - start_app
-      - run: docker-compose exec app mix coveralls.json && mix coveralls.html
+      - run: docker-compose run app mix coveralls.json && mix coveralls.html
       - run: docker cp `docker-compose ps -q app`:/app/cover .
       - run: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
@@ -97,8 +96,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - start_app
-      - run: docker-compose exec app mix test --formatter JUnitFormatter
+      - run: docker-compose run app mix test --formatter JUnitFormatter
       - run: docker cp `docker-compose ps -q app`:/tmp/server_junit /tmp
       - store_test_results:
           path: /tmp/server_junit
