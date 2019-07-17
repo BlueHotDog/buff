@@ -75,7 +75,6 @@ defmodule BuffServer.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_unit_notifier, "~> 0.1", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: :dev},
       {:apex, "~>1.2.1", only: [:dev, :test]},
       {:mox, "~> 0.5", only: :test},
       {:faker, "~> 0.12", only: :test},
