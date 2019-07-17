@@ -84,9 +84,8 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose run app mix coveralls.json
-      - run: docker-compose run app mix coveralls.html
-      - run: docker cp `docker-compose ps -q app`:/app/cover .
+      - run: docker-compose run --volume ${pwd}/cover:/app/cover app mix coveralls.html
+      - run: docker-compose run --volume ${pwd}/cover:/app/cover app mix coveralls.json
       - run: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./cover
@@ -97,24 +96,19 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose run app mkdir /tmp/server_junit
-      - run: docker-compose run app mix test --formatter JUnitFormatter
-      - run: docker cp `docker-compose ps -q app`:/tmp/server_junit /tmp
+      - run: docker-compose run --volume /tmp/server_junit:/tmp/server_junit app mix test --formatter JUnitFormatter
       - store_test_results:
           path: /tmp/server_junit
       - store_artifacts:
           path: /tmp/server_junit
-
-  #     - run: "mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats"
-  #     - store_test_results:
-  #         path: /tmp/server_junit
-  #     - store_artifacts:
-  #         path: /tmp/server_junit
-  #     - save_cache:
-  #         key: v1-plt-cache-{{ checksum "mix.lock" }}
-  #         paths:
-  #           - _build
-  #           - ~/.mix
+  quality:
+    executor: my_exec
+    working_directory: "/tmp/repo/server"
+    steps:
+      - restore_repo
+      - load_mix_deps
+      - run: docker-compose run app mix do format --check-formatted, credo --strict, security
+      - run: docker-compose run app mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats
 
 workflows:
   version: 2
@@ -131,5 +125,8 @@ workflows:
           requires:
             - setup_db
       - test_junit:
+          requires:
+            - setup_db
+      - credo:
           requires:
             - setup_db
