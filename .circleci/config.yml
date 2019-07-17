@@ -127,6 +127,6 @@ workflows:
       - test_junit:
           requires:
             - setup_db
-      - credo:
+      - quality:
           requires:
             - setup_db
