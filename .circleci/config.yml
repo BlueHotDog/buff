@@ -97,6 +97,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
+      - run: docker-compose run app mkdir /tmp/server_junit
       - run: docker-compose run app mix test --formatter JUnitFormatter
       - run: docker cp `docker-compose ps -q app`:/tmp/server_junit /tmp
       - store_test_results:
