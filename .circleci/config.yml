@@ -115,6 +115,8 @@ jobs:
     executor: my_exec
     working_directory: "/tmp/repo/server"
     steps:
+      - restore_repo
+      - load_mix_deps
       - restore_cache:
           keys:
             - v1-plt-cache-{{ checksum "mix.lock" }}
