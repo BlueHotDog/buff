@@ -107,7 +107,7 @@ jobs:
     steps:
       - restore_repo
       - load_mix_deps
-      - run: docker-compose run app mix do format --check-formatted, credo --strict, security
+      - run: docker-compose run MIX_ENV=dev app mix do format --check-formatted, credo --strict, security
       - run: docker-compose run app mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats
 
 workflows:
