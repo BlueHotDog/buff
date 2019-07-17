@@ -19,7 +19,7 @@ executors:
 commands:
   start_app:
     steps:
-      - run: docker-compose up --no-build app
+      - run: docker-compose up --no-build -d app
   restore_repo:
     steps:
       - restore_cache:
