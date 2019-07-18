@@ -35,13 +35,15 @@ defmodule BuffServer.DataCase do
     end
   end
 
+
   setup tags do
     :ok = SQLSandbox.checkout(BuffServer.Repo)
-    Mox.stub_with(BuffServer.Argon2Mock, BuffServer.ComeoninStub)
 
     unless tags[:async] do
       SQLSandbox.mode(BuffServer.Repo, {:shared, self()})
     end
+
+    Mox.stub_with(BuffServer.Argon2Mock, BuffServer.ComeoninStub)
 
     :ok
   end
