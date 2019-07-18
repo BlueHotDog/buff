@@ -30,7 +30,7 @@ defmodule BuffServer.DataCase do
 
       ExUnit.Case.register_attribute(__MODULE__, :fixtures, accumulate: true)
 
-      setup :set_mox_from_context
+      setup :set_mox_private
       setup :verify_on_exit!
     end
   end

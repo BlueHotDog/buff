@@ -4,8 +4,6 @@ defmodule BuffServer.PackagesTest do
   import Mox
 
   describe "packages" do
-    setup :verify_on_exit!
-
     @s3_bucket_name Application.get_env(:buff_server, :s3_bucket_name)
     @dummy_artifact File.read("test/buff_server/fixtures/dummy_artifact.gz") |> elem(1)
 
