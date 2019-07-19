@@ -9,6 +9,9 @@ setup: app
 test.watch: app
 	docker-compose exec app mix test.watch
 
+test: app
+	docker-compose exec app mix test
+
 server: setup
 	docker-compose exec app mix phx.server
 

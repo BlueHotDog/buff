@@ -14,5 +14,6 @@
 
   // See below
   "editor.acceptSuggestionOnEnter": "off",
-  "elixir.projectPath": "./buff_server"
+  "elixir.projectPath": "./buff_server",
+  "elixirLS.projectDir": "./server"
 }
