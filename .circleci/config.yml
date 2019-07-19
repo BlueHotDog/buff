@@ -85,8 +85,8 @@ jobs:
       - restore_repo
       - load_mix_deps
       - run: docker-compose up -d app
-      - run: docker-compose exec app mix coveralls.html
       - run: docker-compose exec app mix coveralls.json
+      - run: docker-compose exec app mix coveralls.html
       - run: bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./cover

@@ -35,7 +35,6 @@ defmodule BuffServer.DataCase do
     end
   end
 
-
   setup tags do
     :ok = SQLSandbox.checkout(BuffServer.Repo)
 
