@@ -118,15 +118,15 @@ jobs:
       - load_mix_deps
       - restore_cache:
           keys:
-            - v3-plt-cache-{{ checksum "mix.lock" }}
-            - v3-plt-cache
-      - run: docker-compose run app mix dialyzer --plt
+            - v4-plt-cache-{{ checksum "mix.lock" }}
+            - v4-plt-cache
+      - run: docker-compose run -e MIX_ENV=test app mix dialyzer --plt
       - save_cache:
-          key: v3-plt-cache-{{ checksum "mix.lock" }}
+          key: v4-plt-cache-{{ checksum "mix.lock" }}
           paths:
-            - /var/lib/docker/volumes/repo_build
-            - /var/lib/docker/volumes/repo_data
-      - run: docker-compose run app mix dialyzer
+            - deps
+            - _build
+      - run: docker-compose run -e MIX_ENV=test app mix dialyzer
 
 workflows:
   version: 2
