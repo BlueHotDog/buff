@@ -120,9 +120,14 @@ jobs:
           keys:
             - v4-plt-cache-{{ checksum "mix.lock" }}
             - v4-plt-cache
-      - run: docker-compose run -e MIX_ENV=test app mix dialyzer --plt
+      - run: docker-compose run -v /opt/mix:/opt/mix -v /tmp/repo/server/_build:/app/_build -e MIX_ENV=test app mix dialyzer --plt
       - save_cache:
           key: v4-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - _build
+      - save_cache:
+          key: v4-plt-cache
           paths:
             - deps
             - _build
