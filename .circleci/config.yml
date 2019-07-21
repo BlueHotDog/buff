@@ -122,7 +122,7 @@ jobs:
       - restore_cache:
           keys:
             - v7-plt-cache-{{ checksum "mix.lock" }}
-      - run: docker-compose run -v /tmp/buff/dialyzer:/tmp/buff/dialyzer -v /tmp/repo/server/_build:/app/_build/test -e MIX_ENV=test app mix dialyzer --plt
+      - run: docker-compose run -v /tmp/buff/dialyzer:/tmp/buff/dialyzer -v /tmp/repo/server/_build:/app/_build -e MIX_ENV=test app mix dialyzer --plt
       - save_cache:
           key: v7-plt-cache-{{ checksum "mix.lock" }}
           paths:
