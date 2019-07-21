@@ -118,20 +118,20 @@ jobs:
       - load_mix_deps
       - restore_cache:
           keys:
-            - v4-plt-cache-{{ checksum "mix.lock" }}
-            - v4-plt-cache
-      - run: docker-compose run -v /opt/mix:/opt/mix -v /tmp/repo/server/_build:/app/_build -e MIX_ENV=test app mix dialyzer --plt
-      - save_cache:
-          key: v4-plt-cache-{{ checksum "mix.lock" }}
-          paths:
-            - deps
-            - _build
-      - save_cache:
-          key: v4-plt-cache
-          paths:
-            - deps
-            - _build
-      - run: docker-compose run -e MIX_ENV=test app mix dialyzer
+            - v5-plt-cache-{{ checksum "mix.lock" }}
+            - v5-plt-cache
+      # - run: docker-compose run -v /tmp/repo/server/_build:/app/_build -e MIX_ENV=test app mix dialyzer --plt
+      # - save_cache:
+      #     key: v4-plt-cache-{{ checksum "mix.lock" }}
+      #     paths:
+      #       - deps
+      #       - _build
+      # - save_cache:
+      #     key: v4-plt-cache
+      #     paths:
+      #       - deps
+      #       - _build
+      # - run: docker-compose run -e MIX_ENV=test app mix dialyzer
 
 workflows:
   version: 2
@@ -144,15 +144,15 @@ workflows:
       - setup_db:
           requires:
             - build_server
-      - coveralls:
-          requires:
-            - setup_db
-      - test_junit:
-          requires:
-            - setup_db
-      - quality:
-          requires:
-            - setup_db
+      # - coveralls:
+      #     requires:
+      #       - setup_db
+      # - test_junit:
+      #     requires:
+      #       - setup_db
+      # - quality:
+      #     requires:
+      #       - setup_db
       - dialyzer:
           requires:
             - setup_db
