@@ -46,8 +46,8 @@ services:
     command: mix do deps.get, deps.compile, phx.server
     volumes:
       - ./server:/app:delegated
-      - deps:/app/deps
-      - build:/app/_build
+      - deps:/app/deps:cached
+      - build:/app/_build:cached
       # - ./server/deps:/app/deps:delegated
       # - ./server/_build:/app/_build:delegated
       # - ./server/priv/static:/app/priv/static:delegated
