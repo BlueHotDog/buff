@@ -109,7 +109,10 @@ jobs:
       - load_mix_deps
       - run: docker-compose run app mix do format --check-formatted, credo --strict
       - run: docker-compose run app mix do xref deprecated --include-siblings, xref unreachable --include-siblings, xref graph --format stats
-
+# /opt/mix/dialyxir_erlang-22.0.7_elixir-1.9.0.plt
+# /opt/mix/dialyxir_erlang-22.0.7.plt
+# /app/_build/test/dialyxir_erlang-22.0.7_elixir-1.9.0_deps-test.plt
+# /app/deps/comeonin/priv/plts/dialyzer.plt
   dialyzer:
     executor: my_exec
     working_directory: "/tmp/repo/server"
@@ -118,20 +121,15 @@ jobs:
       - load_mix_deps
       - restore_cache:
           keys:
-            - v5-plt-cache-{{ checksum "mix.lock" }}
-            - v5-plt-cache
-      # - run: docker-compose run -v /tmp/repo/server/_build:/app/_build -e MIX_ENV=test app mix dialyzer --plt
-      # - save_cache:
-      #     key: v4-plt-cache-{{ checksum "mix.lock" }}
-      #     paths:
-      #       - deps
-      #       - _build
-      # - save_cache:
-      #     key: v4-plt-cache
-      #     paths:
-      #       - deps
-      #       - _build
-      # - run: docker-compose run -e MIX_ENV=test app mix dialyzer
+            - v7-plt-cache-{{ checksum "mix.lock" }}
+      - run: docker-compose run -v /tmp/buff/dialyzer:/tmp/buff/dialyzer -v /tmp/repo/server/_build:/app/_build/test -e MIX_ENV=test app mix dialyzer --plt
+      - save_cache:
+          key: v7-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - /tmp/buff/dialyzer
+            - _build
+      - run: docker-compose run -e MIX_ENV=test app mix dialyzer
 
 workflows:
   version: 2

@@ -12,7 +12,7 @@ defmodule BuffServer.MixProject do
       aliases: aliases(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      dialyzer: [plt_add_apps: [:mix]],
+      dialyzer: [plt_add_apps: [:mix], plt_core_path: "/tmp/buff/dialyzer"],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
