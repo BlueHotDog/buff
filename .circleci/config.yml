@@ -142,15 +142,15 @@ workflows:
       - setup_db:
           requires:
             - build_server
-      # - coveralls:
-      #     requires:
-      #       - setup_db
-      # - test_junit:
-      #     requires:
-      #       - setup_db
-      # - quality:
-      #     requires:
-      #       - setup_db
-      - dialyzer:
+      - coveralls:
           requires:
             - setup_db
+      - test_junit:
+          requires:
+            - setup_db
+      - quality:
+          requires:
+            - setup_db
+      # - dialyzer:
+      #     requires:
+      #       - setup_db

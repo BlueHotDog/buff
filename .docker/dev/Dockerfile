@@ -22,28 +22,28 @@ RUN mix local.hex --force \
 
 CMD ["tail", "-f", "/dev/null"]
 
-###########################
+##########################
 
-# FROM node:12.5-alpine as webpack
+FROM node:12.5-alpine as webpack
 
-# RUN npm install -g yarn
+RUN npm install -g yarn
 
-# RUN apk --update --upgrade add ca-certificates build-base bash \
-#     && update-ca-certificates --fresh \
-#     && rm -rf /var/cache/apk/*  \
-#     && apk del build-base
+RUN apk --update --upgrade add ca-certificates build-base bash \
+    && update-ca-certificates --fresh \
+    && rm -rf /var/cache/apk/*  \
+    && apk del build-base
 
-# WORKDIR /app/assets
+WORKDIR /app/assets
 
-# COPY ./server/assets/package.json assets/*yarn* ./
-# COPY --from=app /app/deps /app/deps
+COPY ./server/assets/package.json assets/*yarn* ./
+COPY --from=app /app/deps /app/deps
 
-# RUN yarn install
+RUN yarn install
 
-# COPY ./server/assets .
+COPY ./server/assets .
 
-# ENV NODE_ENV="development"
+ENV NODE_ENV="development"
 
-# CMD ["tail", "-f", "/dev/null"]
+CMD ["tail", "-f", "/dev/null"]
 
-# ###############################
+###############################

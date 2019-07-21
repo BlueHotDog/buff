@@ -32,6 +32,8 @@ services:
     volumes:
       - ./server:/app:cached
       - ./server/priv/static:/app/priv/static:delegated
+      - deps:/app/deps:cached
+      - build:/app/_build:cached
 
   app:
     build:
@@ -51,7 +53,7 @@ services:
       # - ./server/priv/static:/app/priv/static:delegated
     depends_on:
       - postgres
-      # - webpack
+      - webpack
       - minio
 volumes:
   #   static: {}
