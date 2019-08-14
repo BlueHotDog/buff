@@ -2,6 +2,7 @@ defmodule BuffServerGrpc.BuffRegistryTest do
   use BuffServerGrpc.IntegrationCase
   use BuffServer.DataCase
 
+  alias BuffServerGrpc.PublishResponse
   alias BuffServerGrpc.RegistryService
   alias BuffServerGrpc.RegistryService.Server, as: RegistryServer
 
@@ -17,7 +18,7 @@ defmodule BuffServerGrpc.BuffRegistryTest do
         {:ok, %{status_code: 200}}
       end)
       get_client(RegistryServer, fn channel ->
-        assert {:ok, %BuffServerGrpc.PublishResponse{result: true}} == RegistryService.Stub.publish(channel, publish_req)
+        assert {:ok, %PublishResponse{result: true}} == RegistryService.Stub.publish(channel, publish_req)
       end)
     end
 

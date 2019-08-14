@@ -11,7 +11,6 @@ defmodule BuffServerGrpc.RegistryService.Server do
     BuffServerGrpc.PublishResponse.new(result: true)
   end
 
-
   defp get_package_attributes_from_artifact(artifact) do
     {:ok, package_file} = :erl_tar.extract({:binary, artifact}, [:memory, :compressed, {:files, ['buff.toml']}])
     {_, buff_toml} = List.first(package_file)
