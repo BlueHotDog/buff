@@ -15,7 +15,7 @@ config :ex_aws,
   http_client: ExAws.Request.HttpMock
 
 config :ex_aws, :s3,
-  host: System.get_env("MINIO_HOST") || "127.0.0.1",
+  host: System.get_env("MINIO_HOST") || "minio",
   region: "local",
   scheme: "http://",
   port: 9000,
@@ -26,7 +26,7 @@ config :buff_server, BuffServer.Repo,
   username: "postgres",
   password: "postgres",
   database: "buff_server_test",
-  hostname: "localhost",
+  hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :joken,

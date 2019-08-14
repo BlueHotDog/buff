@@ -19,3 +19,8 @@ GRPC allows companies to build scalabale and backwards compatible services easil
 # Project structure
 The project is split into two parts CLI and Server, each containing their respective documentation.
 
+
+# Development
+- Install Tilt
+- run `tilt up` from the root to start the server
+- to run tests run `docker-compose exec app mix test.watch`
