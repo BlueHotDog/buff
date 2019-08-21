@@ -1,0 +1,41 @@
+[package]
+
+name        = "nix"
+description = "Rust friendly bindings to *nix APIs"
+version     = "0.9.0"
+authors     = ["The nix-rust Project Developers"]
+repository  = "https://github.com/nix-rust/nix"
+license     = "MIT"
+categories  = ["os::unix-apis"]
+exclude     = [
+  ".gitignore",
+  ".travis.yml",
+  "deploy.sh",
+  "test/**/*"
+]
+
+[dependencies]
+libc = "0.2.25"
+bitflags = "0.9"
+cfg-if = "0.1.0"
+void = "1.0.2"
+
+[dev-dependencies]
+lazy_static = "0.2"
+rand = "0.3.8"
+tempdir = "0.3"
+tempfile = "2"
+nix-test = { path = "nix-test", version = "0.0.1" }
+
+[[test]]
+name = "test"
+path = "test/test.rs"
+
+[[test]]
+name = "test-mount"
+path = "test/test_mount.rs"
+harness = false
+
+[[test]]
+name = "test-ptymaster-drop"
+path = "test/test_ptymaster_drop.rs"

@@ -1,0 +1,63 @@
+"""
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+package(default_visibility = [
+  # Public for visibility by "@raze__crate__version//" targets.
+  #
+  # Prefer access through "//cli/cargo", which limits external
+  # visibility to explicit Cargo.toml dependencies.
+  "//visibility:public",
+])
+
+licenses([
+  "notice", # "MIT,Apache-2.0"
+])
+
+load(
+    "@io_bazel_rules_rust//rust:rust.bzl",
+    "rust_library",
+    "rust_binary",
+    "rust_test",
+)
+
+
+# Unsupported target "backtrack" with type "test" omitted
+# Unsupported target "backtrack-bytes" with type "test" omitted
+# Unsupported target "backtrack-utf8bytes" with type "test" omitted
+# Unsupported target "crates-regex" with type "test" omitted
+# Unsupported target "default" with type "test" omitted
+# Unsupported target "default-bytes" with type "test" omitted
+# Unsupported target "nfa" with type "test" omitted
+# Unsupported target "nfa-bytes" with type "test" omitted
+# Unsupported target "nfa-utf8bytes" with type "test" omitted
+
+rust_library(
+    name = "regex",
+    crate_root = "src/lib.rs",
+    crate_type = "lib",
+    edition = "2015",
+    srcs = glob(["**/*.rs"]),
+    deps = [
+        "//cli/cargo/vendor/aho-corasick-0.7.6:aho_corasick",
+        "//cli/cargo/vendor/memchr-2.2.1:memchr",
+        "//cli/cargo/vendor/regex-syntax-0.6.11:regex_syntax",
+        "//cli/cargo/vendor/thread_local-0.3.6:thread_local",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    version = "1.2.1",
+    crate_features = [
+        "default",
+        "use_std",
+    ],
+)
+
+# Unsupported target "shootout-regex-dna" with type "example" omitted
+# Unsupported target "shootout-regex-dna-bytes" with type "example" omitted
+# Unsupported target "shootout-regex-dna-cheat" with type "example" omitted
+# Unsupported target "shootout-regex-dna-replace" with type "example" omitted
+# Unsupported target "shootout-regex-dna-single" with type "example" omitted
+# Unsupported target "shootout-regex-dna-single-cheat" with type "example" omitted
