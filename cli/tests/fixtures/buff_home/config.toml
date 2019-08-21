@@ -1,7 +1,0 @@
-preferred_registry = "localhost:50051"
-
-[registries."localhost:50051"]
-token = "token1"
-
-[registries."localhost:50052"]
-token = "token2"

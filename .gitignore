@@ -1,2 +1,8 @@
-devenv/data
 .DS_Store
+.docker/data/
+.idea/
+bazel-bin
+bazel-buff
+bazel-genfiles
+bazel-out
+bazel-testlogs

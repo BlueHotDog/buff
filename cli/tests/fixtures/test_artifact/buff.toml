@@ -1,9 +1,0 @@
-[package]
-name = "test_package"
-description = "test_package description"
-homepage = "https://example.com"
-repository_url = "https://repo.com"
-keywords = ["awesome", "great"]
-
-[dependencies]
-yummy_package = "1.0"
