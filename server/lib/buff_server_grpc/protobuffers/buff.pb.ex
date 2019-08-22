@@ -72,7 +72,7 @@ defmodule BuffServerGrpc.AuthService.Service do
   @moduledoc false
   use GRPC.Service, name: "buff_server_grpc.AuthService"
 
-  rpc :Login, BuffServerGrpc.LoginRequest, BuffServerGrpc.LoginResponse
+  rpc(:Login, BuffServerGrpc.LoginRequest, BuffServerGrpc.LoginResponse)
 end
 
 defmodule BuffServerGrpc.AuthService.Stub do
@@ -84,7 +84,7 @@ defmodule BuffServerGrpc.RegistryService.Service do
   @moduledoc false
   use GRPC.Service, name: "buff_server_grpc.RegistryService"
 
-  rpc :Publish, BuffServerGrpc.PublishRequest, BuffServerGrpc.PublishResponse
+  rpc(:Publish, BuffServerGrpc.PublishRequest, BuffServerGrpc.PublishResponse)
 end
 
 defmodule BuffServerGrpc.RegistryService.Stub do

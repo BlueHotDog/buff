@@ -10,13 +10,16 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-%BuffServer.Accounts.User{}
-|> BuffServer.Accounts.User.changeset(%{
-  password: "password",
-  full_name: "Test Test",
-  email: "test@test.com",
-  is_email_verified: true,
-  public_email: "test@test.com",
-  is_public_email_verified: true
+BuffServer.Repo.insert!(%Ecto.Changeset{
+  action: nil,
+  changes: %{
+    email: "test@test.com",
+    full_name: "Test Test",
+    # password is password
+    password_hash: "$argon2id$v=19$m=131072,t=8,p=4$C9cbxIUGINuaSKdW8T/fNA$6I7e3BScnTku88kN73lZHWJHbXYemApHYJ9ZSsgrfN0",
+    public_email: "test@test.com"
+  },
+  errors: [],
+  data: %BuffServer.Accounts.User{},
+  valid?: true
 })
-|> BuffServer.Repo.insert()

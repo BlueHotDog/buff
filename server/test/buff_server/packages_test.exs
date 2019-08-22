@@ -74,7 +74,9 @@ defmodule BuffServer.PackagesTest do
         {:ok, %{status_code: 404}}
       end)
 
-      assert {:error, :s3_artifact, _, _} = @default_attrs |> Packages.create_package()
+      {code, step, _, _} = @default_attrs |> Packages.create_package()
+      assert code == :error
+      assert step == :s3_artifact
       assert Packages.list_packages() == []
     end
 

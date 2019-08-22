@@ -23,12 +23,10 @@ defmodule BuffServer.AccountsTest do
       public_email: nil
     }
 
-    test "list_users/0 returns all users", %{user_params: user_params} do
+    test "list_users/0 returns all users", %{user: created_user} do
       list_users = Accounts.list_users()
-      assert length(list_users) == 1
-      user = hd(list_users)
-      refute user.password_hash == nil
-      assert user.email == user_params.email
+      assert length(list_users) == 2
+      refute created_user.password_hash == nil
     end
 
     test "get_user!/1 returns the user with given id", %{

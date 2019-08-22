@@ -1,2 +1,8 @@
-devenv/data
+.docker/data
 .DS_Store
+# Dialyzer
+server/priv/plts/*.plt
+server/priv/plts/*.plt.hash
+
+# Sobelow
+server/.sobelow

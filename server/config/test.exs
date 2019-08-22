@@ -26,7 +26,7 @@ config :buff_server, BuffServer.Repo,
   username: "postgres",
   password: "postgres",
   database: "buff_server_test",
-  hostname: "postgres",
+  hostname: System.get_env("POSTGRES_HOST") || "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :joken,

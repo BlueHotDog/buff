@@ -4,7 +4,7 @@ services:
     container_name: minio
     image: minio/minio:latest
     volumes:
-      - ./docker/data/minio:/data:delegated
+      - ./.docker/data/minio:/data:delegated
     ports:
       - "9000:9000"
     environment:
@@ -16,10 +16,13 @@ services:
     image: postgres:11-alpine
     container_name: buff_postgres
     restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
     ports:
       - 15432:5432
     volumes:
-      - ./docker/data/postgres:/var/lib/postgresql/data:delegated
+      - ./.docker/data/postgres:/var/lib/postgresql/data:delegated
 
   webpack:
     build:

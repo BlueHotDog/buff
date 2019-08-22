@@ -9,10 +9,15 @@ defmodule BuffServer.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
+      elixirc_options: [warnings_as_errors: true],
       aliases: aliases(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      dialyzer: [plt_add_apps: [:mix]],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/buff_server.plt"},
+        plt_add_apps: [:mix, :ex_unit],
+        ignore_warnings: ".dialyzer_ignore.exs"
+      ],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -71,8 +76,9 @@ defmodule BuffServer.MixProject do
       {:cowlib, "~> 2.7.3", [env: :prod, hex: "cowlib", repo: "hexpm", optional: false, override: true]},
       {:gun, "~> 1.3", override: true},
       # Test/Dev stuff
-      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 0.8", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.8.0", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ex_unit_notifier, "~> 0.1", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},

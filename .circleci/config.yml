@@ -1,122 +1,159 @@
-version: 2
-jobs:
-  build_server:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8.2-otp-22
-        environment:
-          MIX_ENV: test
-          MINIO_HOST: minio
-      - image: circleci/postgres:10-alpine-postgis-ram
-      - image: minio/minio:latest
-        name: minio
-        environment:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        command: ["server", "/data"]
-    working_directory: ~/repo/server
-    steps:
-      - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
-      - run: mix do deps.get, compile --warnings-as-errors
-      - save_cache:
-          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: deps
-      - save_cache:
-          key: v1-mix-cache-{{ .Branch }}
-          paths: deps
-      - save_cache:
-          key: v1-mix-cache
-          paths: deps
-      - save_cache:
-          key: v1-build-cache-{{ .Branch }}
-          paths: _build
-      - save_cache:
-          key: v1-build-cache
-          paths: _build
+version: 2.1
 
-  analyze_server:
-    parallelism: 1
+executors:
+  elixir:
+    parameters:
+      app:
+        type: string
+        default: ""
     docker:
-      - image: circleci/elixir:1.8.2-otp-22
+      - image: circleci/elixir:1.9.1
         environment:
           MIX_ENV: test
-          MINIO_HOST: minio
-      - image: circleci/postgres:10-alpine-postgis-ram
+          MINIO_HOST: "127.0.0.1"
+          POSTGRES_HOST: "127.0.0.1"
       - image: minio/minio:latest
-        name: minio
         environment:
           MINIO_ACCESS_KEY: minio
           MINIO_SECRET_KEY: minio123
         command: ["server", "/data"]
-    working_directory: ~/repo/server
-    steps:
-      - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
-      - run:
-          name: Credo
-          command: mix credo --strict --ignore todo
-      - run:
-          name: formatter
-          command: mix format --check-formatted
-      - run:
-          name: dialyzer
-          command: mix dialyzer
-  test_server:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8.2-otp-22
+      - image: circleci/postgres:11.5
         environment:
-          MIX_ENV: test
-          MINIO_HOST: minio
-          CODECOV_TOKEN: d5e09a52-0017-457a-af70-5557b7d1faad
-      - image: circleci/postgres:10-alpine-postgis-ram
-      - image: minio/minio:latest
-        name: minio
-        environment:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        command: ["server", "/data"]
-    working_directory: ~/repo/server
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: buff_server_test
+    working_directory: ~/app/<< parameters.app >>
+    environment:
+      MIX_ENV: test
+
+commands:
+  fast-checkout:
     steps:
-      - checkout:
-          path: ~/repo/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
-      - restore_cache:
-          keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
-      - restore_cache:
-          keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
+      - attach_workspace:
+          at: /home/circleci
+  restore_plts:
+    steps:
       - run:
-          name: Wait for DB
+          name: "ELIXIR_VERSION.lock"
+          command: echo "${ELIXIR_VERSION}" > ELIXIR_VERSION.lock
+      - run:
+          name: "OTP_VERSION.lock"
+          command: echo "${OTP_VERSION}" > OTP_VERSION.lock
+      - restore_cache:
+          keys:
+            - v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+            - v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.exs" }}
+            - v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}
+  save_plts:
+    steps:
+      - run:
+          name: "ELIXIR_VERSION.lock"
+          command: echo "${ELIXIR_VERSION}" > ELIXIR_VERSION.lock
+      - run:
+          name: "OTP_VERSION.lock"
+          command: echo "${OTP_VERSION}" > OTP_VERSION.lock
+      - save_cache:
+          key: v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+      - save_cache:
+          key: v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.exs" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+      - save_cache:
+          key: v1-plt-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+  restore_deps:
+    steps:
+      - run:
+          name: "ELIXIR_VERSION.lock"
+          command: echo "${ELIXIR_VERSION}" > ELIXIR_VERSION.lock
+      - run:
+          name: "OTP_VERSION.lock"
+          command: echo "${OTP_VERSION}" > OTP_VERSION.lock
+      - restore_cache:
+          keys:
+            - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+            - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.exs" }}
+            - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}
+
+  save_deps:
+    steps:
+      - run:
+          name: "ELIXIR_VERSION.lock"
+          command: echo "${ELIXIR_VERSION}" > ELIXIR_VERSION.lock
+      - run:
+          name: "OTP_VERSION.lock"
+          command: echo "${OTP_VERSION}" > OTP_VERSION.lock
+      - save_cache:
+          key: v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+      - save_cache:
+          key: v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.exs" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+      - save_cache:
+          key: v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}
+          paths:
+            - deps
+            - _build
+            - ~/.mix
+            - priv/plts
+  wait_for_postgres:
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Waiting for Postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+jobs:
+  checkout_code:
+    executor:
+      name: elixir
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - app
+
+  server_mix_deps:
+    executor:
+      name: elixir
+      app: "server"
+    steps:
+      - fast-checkout
+      - restore_deps
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: mix do deps.get, deps.compile, compile
+      - save_deps
+  server_test:
+    executor:
+      name: elixir
+      app: "server"
+    steps:
+      - fast-checkout
+      - restore_deps
+      - wait_for_postgres
+      - run: mix ecto.setup
       - run: mkdir -p /tmp/server_junit/
       - run: mix coveralls.json
       - run: bash <(curl -s https://codecov.io/bash)
@@ -125,14 +162,57 @@ jobs:
           path: /tmp/server_junit
       - store_artifacts:
           path: /tmp/server_junit
+
+  server_quality_check:
+    executor:
+      name: elixir
+      app: "server"
+    steps:
+      - fast-checkout
+      - restore_deps
+      - run:
+          name: Credo
+          command: mix credo --strict --ignore todo
+
+  server_format_check:
+    executor:
+      name: elixir
+      app: "server"
+    steps:
+      - fast-checkout
+      - restore_deps
+      - run: mix format
+      - save_deps
+
+  server_dialyzer:
+    executor:
+      name: elixir
+      app: "server"
+    steps:
+      - fast-checkout
+      - restore_deps
+      - restore_plts
+      - run: mkdir -p priv/plts
+      - run: mix dialyzer --halt-exit-status --format short
+      - save_plts
+
 workflows:
   version: 2
-  build_and_test:
+  server_build_and_test:
     jobs:
-      - build_server
-      - analyze_server:
+      - checkout_code
+      - server_mix_deps:
           requires:
-            - build_server
-      - test_server:
+            - checkout_code
+      - server_test:
           requires:
-            - build_server
+            - server_mix_deps
+      - server_format_check:
+          requires:
+            - server_mix_deps
+      - server_quality_check:
+          requires:
+            - server_mix_deps
+      - server_dialyzer:
+          requires:
+            - server_mix_deps

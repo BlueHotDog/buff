@@ -47,9 +47,9 @@ defmodule BuffServer.Accounts.User do
     |> validate_confirmation(:password)
     |> validate_format(:public_email, ~r/@/)
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
-    |> put_pass_hash
     |> update_change(:email, &String.downcase/1)
+    |> put_pass_hash
+    |> unique_constraint(:email)
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
