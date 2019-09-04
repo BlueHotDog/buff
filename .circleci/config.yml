@@ -236,6 +236,7 @@ jobs:
       app: "cli"
     steps:
       - fast-checkout
+      - run: cargo install --path .
       - setup-sccache
       - restore-sccache-cache
       - run: cargo build
