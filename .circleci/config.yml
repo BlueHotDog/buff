@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  rust: glotrade/rust@0.1.3
 executors:
   elixir:
     parameters:
@@ -12,6 +13,7 @@ executors:
           MIX_ENV: test
           MINIO_HOST: "127.0.0.1"
           POSTGRES_HOST: "127.0.0.1"
+      - image: circleci/rust:latest
       - image: minio/minio:latest
         environment:
           MINIO_ACCESS_KEY: minio
@@ -86,7 +88,6 @@ commands:
             - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
             - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.exs" }}
             - v8-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}
-
   save_deps:
     steps:
       - run:
@@ -122,6 +123,37 @@ commands:
       - run:
           name: Waiting for Postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  setup-sccache:
+    steps:
+      - run:
+          name: Install sccache
+          command: |
+            cargo install sccache
+            # This configures Rust to use sccache.
+            echo 'export "RUSTC_WRAPPER"="sccache"' >> $BASH_ENV
+            # This is the maximum space sccache cache will use on disk.
+            echo 'export "SCCACHE_CACHE_SIZE"="1G"' >> $BASH_ENV
+            sccache --version
+  restore-sccache-cache:
+    steps:
+      - restore_cache:
+          name: Restore sccache cache
+          key: v1-sccache-cache-stable-{{ arch }}-{{ .Environment.CIRCLE_JOB }}
+  save-sccache-cache:
+    steps:
+      - save_cache:
+          name: Save sccache cache
+          # We use {{ epoch }} to always upload a fresh cache:
+          # Of course, restore_cache will not find this exact key,
+          # but it will fall back to the closest key (aka the most recent).
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v1-sccache-cache-stable-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ epoch }}
+          paths:
+            - "~/.cache/sccache"
+  start_server:
+    steps:
+      - restore_deps
+      - run: cd ~/app/server && mix phx.server
 
 jobs:
   checkout_code:
@@ -133,7 +165,6 @@ jobs:
           root: /home/circleci
           paths:
             - app
-
   server_mix_deps:
     executor:
       name: elixir
@@ -162,7 +193,6 @@ jobs:
           path: /tmp/server_junit
       - store_artifacts:
           path: /tmp/server_junit
-
   server_quality_check:
     executor:
       name: elixir
@@ -173,7 +203,6 @@ jobs:
       - run:
           name: Credo
           command: mix credo --strict --ignore todo
-
   server_format_check:
     executor:
       name: elixir
@@ -183,7 +212,6 @@ jobs:
       - restore_deps
       - run: mix format
       - save_deps
-
   server_dialyzer:
     executor:
       name: elixir
@@ -195,6 +223,49 @@ jobs:
       - run: mkdir -p priv/plts
       - run: mix dialyzer --halt-exit-status --format short
       - save_plts
+  cli_generate_lockfile:
+    executor:
+      name: elixir
+      app: "cli"
+    steps:
+      - run:
+          name: Calculate dependencies
+          command: test -e Cargo.lock || cargo generate-lockfile
+  cli_build:
+    executor:
+      name: elixir
+      app: "cli"
+    steps:
+      - fast-checkout
+      - setup-sccache
+      - restore-sccache-cache
+      - run: cargo build
+      - save-sccache-cache
+  cli_test:
+    executor:
+      name: elixir
+      app: "cli"
+    steps:
+      - fast-checkout
+      - setup-sccache
+      - restore-sccache-cache
+      - start_server
+      - run: cargo test --all
+      - save-sccache-cache
+  cli_format:
+    executor:
+      name: elixir
+      app: "cli"
+    steps:
+      - cli_generate_lockfile
+      - run:
+          name: Check formatting
+          command: |
+            if rustup component add rustfmt; then
+              cargo fmt --all -- --check
+            else
+              echo Skipping rustfmt
+            fi
 
 workflows:
   version: 2
@@ -216,3 +287,10 @@ workflows:
       - server_dialyzer:
           requires:
             - server_mix_deps
+      - cli_build:
+          requires:
+            - checkout_code
+      - cli_test:
+          requires:
+            - server_mix_deps
+            - cli_build
